@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jovaughn's PortFolio</title>
+
+    <!-- CSS  -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="css/materialize.css"
+      type="text/css"
+      rel="stylesheet"
+      media="screen,projection"
+    />
+    <link
+      href="css/style.css"
+      type="text/css"
+      rel="stylesheet"
+      media="screen,projection"
+    />
+  </head>
+
+  <body>
+   
+
+    <div id="index-banner" class="parallax-container">
+      <div class="section no-pad-bot">
+        <div class="container">
+          <br /><br />
+          <h1 class="header center white-text text-lighten-2">
+            Store Front
+          </h1>
+          <br /><br />         
+        </div>
+      </div>
+      <div class="parallax">
+        <img src="background1.jpg" alt="Unsplashed background img 1" />
+      </div>
+    </div>
+
+    <div class="container">
+      
+      <div class="section">
+        <div class="row">
+          <div id="app">            
+            <div style="min-height: 1090px;">
+              <!-- Modal Structure -->
+            <div id="EditItemModal" class="modal">
+              <div class="modal-content">
+                <h4 id="ModalHeader">Add New Item</h4>
+                <div class="row">
+                  <form class="col s12">
+                    <div class="row">
+                      <div class="input-field col s6">
+                        <input id="ProductName" type="text" maxlength="50">
+                        <label for="ProductName">Product Name</label>
+                        <span class="helper-text" data-error="Required" data-success=""></span>
+                      </div>
+                      <div class="input-field col s6">
+                        <input id="Units" type="number" min="1" max="10000" onblur="ValidateUnits()">
+                        <label for="Units">Units In Stock</label>
+                        <span class="helper-text" data-error="Required" data-success=""></span>
+                      </div>
+
+                      <div class="input-field col s6">              
+                        <i class="material-icons tiny prefix">attach_money</i>
+                        <input id="Price" type="number" min="1" max="10000" onblur="ValidatePrice()">
+                        <label for="Price">Price</label>
+                        <span class="helper-text" data-error="Required" data-success=""></span>
+                      </div>
+                    </div>                        
+                    </div>
+                    <input id="ProductID" type="hidden">
+                    <input id="ID" type="hidden">
+                  </form>
+                
+              </div>
+              <div class="modal-footer">
+                <button v-on:click="editOrCreateItem" class="waves-effect waves-green btn-flat"><span id=AddUpdateText></span></button>
+              </div>
+            </div>
+            
+            <div class="col s12">
+              <div class="input-field col s6">
+                <i class="material-icons prefix">search</i>
+                <label for="search">Search Products</label>
+                <input type="text" v-model="query" id="search" maxlength="30" />
+              </div>
+
+              <div class="col s6 right-align">               
+                <a onclick="NewItemModalShow()" class="btn waves-effect waves-light green"><i class="left material-icons">add</i>Add</span></a>
+
+                <a class="btn dropdown-trigger" data-target='PageSizeDropDown'><i class="left material-icons">list</i>Page Size</a>
+                  <ul id='PageSizeDropDown' class='dropdown-content'> 
+                    <li><a  href="#!" v-on:click="pageSize=10">10</a></li>
+                    <li><a  href="#!" v-on:click="pageSize=30">30</a></li>
+                    <li><a  href="#!" v-on:click="pageSize=60">60</a></li>
+                  </ul>
+
+                  <a class="btn dropdown-trigger" data-target='dropdown1'><i class="left material-icons">sort</i>Sort</a>
+                    <ul id='dropdown1' class='dropdown-content'>                     
+                      <li><a id="AscendingPrice" v-on:click="sortElements('AscendingPrice')" href="#!"><i class="material-icons">arrow_downward</i>Price Low To High</a></li>
+                      <li><a id="DescendingPrice"  v-on:click="sortElements('DescendingPrice')"><i class="material-icons">arrow_upward</i>Price High To Low</a></li>                    
+                      <li><a id="AToZ" href="#!"  v-on:click="sortElements('AToZ')" ><i class="material-icons">sort_by_alpha</i>A -> Z</a></li>
+                      <li><a id="ZToA" href="#!" v-on:click="sortElements('ZToA')"><i class="material-icons">sort_by_alpha</i>Z -> A</a></li>
+                    </ul>
+              </div>
+            </div>            
+
+            <transition-group name="list-complete">
+              <div
+                v-for="item,index in computedList"
+                v-bind:key="item.id"
+                class="list-complete-item row"
+              >
+                <div style="padding: 10px;width:300px" class="col grey lighten-4 s12 m12 hoverable">
+                  <div class="center-align">
+                    <image v-bind:src="item.image"></image>
+                  </div>
+                  <div class="center-align">
+                    <div class="truncate" style="font-size: 20px;">
+                      {{item.ProductName}}
+                    </div>
+                    <br />
+                    <span style="font-size: 20px;">
+                      Stock:{{ item.UnitsInStock}}
+                    </span>
+                    <br />
+                    <span>
+                      Price: ${{item.UnitPrice}}
+                    </span>
+                  </div>
+                  <div class="left" style="margin-top: 10px;">
+                    <button class="btn blue waves-effect waves-light" v-on:click="editItem(item.id)">
+                      <i class="material-icons left">edit</i>
+                      Edit
+                    </button>
+                  </div>
+                  <div class="right" style="margin-top: 10px;">
+                    <button class="btn red waves-effect waves-light" v-on:click="removeElement(item.id)">
+                      <i class="material-icons waves-effect waves-light left">delete</i>
+                      remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </transition-group>  
+            </div>  
+            <div class="center-align">
+              <ul class="pagination">
+                <li v-on:click="currentPage=1" class="waves-effect"><a href="#!"><i class="material-icons">first_page</i></a></li>
+                <li v-on:click="currentPage--" v-if="currentPage!=1" class="waves-effect"><a href="#!"><i class="material-icons large">chevron_left</i></a></li>
+                <li  v-else class="waves-effect disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                <span v-for="page,index in pages">
+                  <li v-bind:class="{ active: page.index==currentPage }" v-on:click="currentPage=++index" class="waves-effect"><a href="#!">{{page.index}}</a></li>
+                </span>
+                <li v-on:click="currentPage++" v-if="currentPage!=pages.length" class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                <li  v-else class="waves-effect disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                <li v-on:click="currentPage=pages.length" class="waves-effect"><a href="#!"><i class="material-icons">last_page</i></a></li>
+              </ul>
+            </span>
+            </div>        
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="parallax-container valign-wrapper">
+      <div class="section no-pad-bot">
+        <div class="container">
+          <div class="row center">
+            <h1 class="header col s12">
+              Chart Project
+            </h5>
+          </div>
+        </div>
+      </div>
+      <div class="parallax">
+        <img src="background2.jpg" alt="Unsplashed background img 2" />
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="section">
+        <div class="row">
+          <div class="col s12 center">
+            <h3><i class="mdi-content-send brown-text"></i></h3>
+            <h4>Contact Me</h4>
+            <p class="left-align light">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+              scelerisque id nunc nec volutpat. Etiam pellentesque tristique
+              arcu, non consequat magna fermentum ac. Cras ut ultricies eros.
+              Maecenas eros justo, ullamcorper a sapien id, viverra ultrices
+              eros. Morbi sem neque, posuere et pretium eget, bibendum
+              sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis
+              nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa
+              odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget
+              dignissim mauris, non tristique erat. Vestibulum ante ipsum primis
+              in faucibus orci luctus et ultrices posuere cubilia Curae;
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="parallax-container valign-wrapper">
+      <div class="section no-pad-bot">
+        <div class="container">
+          <div class="row center">
+            <h1 class="header col s12 light">
+              About Me
+            </h5>
+          </div>
+        </div>
+      </div>
+      <div class="parallax">
+        <img src="background3.jpg" alt="Unsplashed background img 3" />
+      </div>
+    </div>    
+
+    <!--  Scripts-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+   
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/materialize.js"></script>
+    <script src="js/init.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"
+      integrity="sha256-OgiHfllOBEOiWQ2OcBsDncRG2k7QBW9Rs1dB7MH2N2s="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+    <script src="/js/vue.js"></script>
+    <script>
+      const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,      
+        maximumFractionDigits: 2,
+      });
+      var socket = io();
+
+      $(()=>{
+        $('.dropdown-trigger').dropdown({constrainWidth:false});
+        $('.modal').modal();
+      });
+
+      socket.on("broadcast", function (data) {
+        vm.updateItem(data);
+      });
+
+      function NewItemModalShow (){
+        $("#ModalHeader").text("Add New Item");
+        $("#AddUpdateText").text("Add");
+        $("#Price").val(formatter.format(1));
+        $("#Units").val(1);
+        $("#ProductName").val(null);
+        $("#ProductID").val(null);
+        $("#ID").val(null);
+        var instance = M.Modal.getInstance($("#EditItemModal"));
+        M.updateTextFields();
+        instance.open();
+      }
+
+      function ValidateUnits(){
+        $("#Units").val(Math.round($("#Units").val()));
+
+        if ($("#Units").val()>10000) {
+          $("#Units").val(10000);
+        }
+
+        if ($("#Units").val()<=0) {
+          $("#Units").val(1);
+        }
+      }
+
+      function ValidatePrice(){
+        var price=$("#Price").val();
+        $("#Price").val(formatter.format(price));
+
+        if (price>10000) {
+          $("#Price").val(10000);
+        }
+
+        if (price<=0) {
+          $("#Price").val(1);
+        }
+      }    
+    </script>
+  </body>
+</html>
