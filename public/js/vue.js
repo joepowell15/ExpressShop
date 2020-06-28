@@ -12,49 +12,53 @@ var vm = new Vue({
   },
   methods: {
     getItems: function () {
-      $.getJSON("api/Items", (resData) => {
+      $.getJSON("api/Orders", (resData) => {
         this.items = resData;
       });
     },
-    editOrCreateItem: function () {
+    editOrCreateOrder: function () {
       var url = "";
-      var newItem = {
-        UnitsInStock: parseInt($("#Units").val()),
-        UnitPrice: parseFloat($("#Price").val()),
-        ProductName: $("#ProductName")
+      var newOrder = {
+        "Order Quantity": parseInt($("#OrderQuantity").val()),
+        "Unit Price": parseFloat($("#UnitPrice").val()),
+        "Customer Name": $("#CustomerName")
           .val()
           .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ""),
-        ProductID: parseInt($("#ProductID").val()),
-        Discontinued: false,
+        "Order ID": parseInt($("#OrderId").val()),
+        "Order Date": new Date(),
+        "Product Category": "",
+        Profit:0,
+        Sales:0,
+        "Ship Mode": "",
       };
 
-      if (!newItem.UnitPrice || !newItem.ProductName || !newItem.UnitsInStock) {
+      if (!newOrder["Customer Name"]) {
         M.toast({
-          html: "Product Name is Required!",
+          html: "Customer Name is Required!",
           classes: "red yellow-text",
         });
         return;
       }
 
       if (!$("#ID").val()) {
-        newItem.ProductID = 1;
-        url = "api/newItem";
+        newOrder["Order Id"]= 1;
+        url = "api/newOrder";
       } else {
-        newItem.id = $("#ID").val();
-        url = "api/UpdateItem";
+        newOrder.id = $("#ID").val();
+        url = "api/UpdateOrder";
       }
 
       $.ajax({
         type: "POST",
         url: url,
-        data: JSON.stringify(newItem),
+        data: JSON.stringify(newOrder),
         contentType: "application/json",
         success: (data) => {
-          var instance = M.Modal.getInstance($("#EditItemModal"));
+          var instance = M.Modal.getInstance($("#EditOrderModal"));
           instance.close();
         },
         error: (jqXHR, textStatus, errorThrown) => {
-          var instance = M.Modal.getInstance($("#EditItemModal"));
+          var instance = M.Modal.getInstance($("#EditOrderModal"));
           instance.close();
           M.toast({ html: jqXHR.responseText, classes: "red yellow-text" });
         },
@@ -63,23 +67,25 @@ var vm = new Vue({
     editItem: function (id) {
       $.ajax({
         type: "Get",
-        url: "api/EditItem",
+        url: "api/EditOrder",
         contentType: "application/json",
         data: { id },
         success: (data) => {
           $("#ModalHeader").text(
-            `Edit - ${data.ProductName.replace(
+            `Edit - ${data["Customer Name"].replace(
               /[&\/\\#,+()$~%.'":*?<>{}]/g,
               ""
             )}`
           );
-          $("#Price").val(formatter.format(data.UnitPrice));
-          $("#Units").val(data.UnitsInStock);
-          $("#ProductName").val(data.ProductName);
-          $("#ProductID").val(data.ProductID);
+
+          console.log(data);
+          $("#UnitPrice").val(formatter.format(data["Unit Price"]));
+          $("#OrderQuantity").val(data["Order Quantity"]);
+          $("#CustomerName").val(data["Customer Name"]);
+          $("#OrderId").val(data["Order ID"]);
           $("#ID").val(data.id);
           $("#AddUpdateText").text("Update");
-          var instance = M.Modal.getInstance($("#EditItemModal"));
+          var instance = M.Modal.getInstance($("#EditOrderModal"));
           M.updateTextFields();
           instance.open();
         },
@@ -88,23 +94,23 @@ var vm = new Vue({
         },
       });
     },
-    updateItem: function (newItem) {
-      if (newItem.old_val != null) {
-        var index = this.items.findIndex((x) => x.id == newItem.old_val.id);
-        if (newItem.new_val == null) {
+    updateOrder: function (newOrder) {
+      if (newOrder.old_val != null) {
+        var index = this.items.findIndex((x) => x.id == newOrder.old_val.id);
+        if (newOrder.new_val == null) {
           Vue.delete(this.items, index);
         } else {
-          Vue.set(this.items, index, newItem.new_val);
+          Vue.set(this.items, index, newOrder.new_val);
         }
       } else {
-        var itemToAdd = newItem.new_val;
-        this.items.push(itemToAdd);
+        var OrderToAdd = newOrder.new_val;
+        this.items.push(OrderToAdd);
       }
     },
     removeElement: function (id) {
       $.ajax({
         type: "POST",
-        url: "api/DeleteItem?" + $.param({ id }),
+        url: "api/DeleteOrder?" + $.param({ id }),
         contentType: "application/json",
         success: (data) => {},
         error: (jqXHR, textStatus, errorThrown) => {
@@ -117,9 +123,9 @@ var vm = new Vue({
       this.sortId = id;
     },
     getFilteredList: function () {
-      var filteredList = this.items.filter(function (item) {
+      var filteredList = this.items.filter(function (Order) {
         return (
-          item.ProductName.toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
+          Order["Customer Name"].toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
         );
       });
 
@@ -152,19 +158,19 @@ var vm = new Vue({
     sortId: function (newId) {
       switch (newId) {
         case "AscendingPrice":
-          this.items = _.orderBy(this.items, "UnitPrice", "asc");
+          this.items = _.orderBy(this.items, "Unit Price", "asc");
           break;
         case "DescendingPrice":
-          this.items = _.orderBy(this.items, "UnitPrice", "desc");
+          this.items = _.orderBy(this.items, "Unit Price", "desc");
           break;
         case "AToZ":
-          this.items = _.orderBy(this.items, "ProductName", "asc");
+          this.items = _.orderBy(this.items, "Customer Name", "asc");
           break;
         case "ZToA":
-          this.items = _.orderBy(this.items, "ProductName", "desc");
+          this.items = _.orderBy(this.items, "Customer Name", "desc");
           break;
         default:
-            M.toast({ html: "Sort Not Found", classes: "red yellow-text" });
+          M.toast({ html: "Sort Not Found", classes: "red yellow-text" });
           break;
       }
     },

@@ -26,6 +26,7 @@ var connection = r.connect(
   },
   (err, conn) => {
     if (err) throw err;
+    console.log("db connected");
     openConn = conn;
     BeginRealTimeStream();
   }
@@ -34,16 +35,16 @@ var connection = r.connect(
 http.listen(3000);
 
 // setInterval(() => {
-//   var allItems = [];
-//   r.table("Items").run(openConn, (err, cursor) => {
+//   var allOrders = [];
+//   r.table("Orders").run(openConn, (err, cursor) => {
 //     if (err) throw err;
 //     cursor.toArray((err, result) => {
-//       allItems = result;      
-//       var randomIndex = Math.floor(Math.random() * (allItems.length - 1) + 1);
-//       var newUnitStockAmount=allItems[randomIndex].UnitsInStock+1;
-//       var id=allItems[randomIndex].id;
+//       allOrders = result;      
+//       var randomIndex = Math.floor(Math.random() * (allOrders.length - 1) + 1);
+//       var newUnitStockAmount=allOrders[randomIndex].UnitsInStock+1;
+//       var id=allOrders[randomIndex].id;
       
-//       r.table("Items").get(id).update({UnitsInStock:newUnitStockAmount}).run(openConn,(err,result)=>{
+//       r.table("Orders").get(id).update({UnitsInStock:newUnitStockAmount}).run(openConn,(err,result)=>{
 //         if (err) throw err;
 //       });
 //     });   
@@ -51,7 +52,7 @@ http.listen(3000);
 // },5000);
 
 function BeginRealTimeStream() {
-  r.table("Items")
+  r.table("Orders")
     .changes()
     .run(openConn, function (err, feed) {
       if (err) {
@@ -61,30 +62,23 @@ function BeginRealTimeStream() {
       feed.on("error", function (error) {
         throw error;
       });
-      feed.on("data", function (newData) {
-        if (newData.new_val != null) {
-          newData.new_val.image =
-            "https://demos.telerik.com/kendo-ui/content/web/foods/" +
-            newData.new_val.ProductID +
-            ".jpg";
-        }
+      feed.on("data", function (newData) {       
         io.sockets.emit("broadcast", newData);
       });
     });
 }
 
-app.get("/api/Items", (req, res) => {
-  r.table("Items").run(openConn, (err, cursor) => {
+app.get("/api/Orders", (req, res) => {
+  r.table("Orders").run(openConn, (err, cursor) => {
     if (err) throw err;
     cursor.toArray((err, result) => {
-      SetImage(result);
       res.json(result);
     });
   });
 });
 
-app.get("/api/EditItem", (req, res) => {
-  r.table("Items")
+app.get("/api/EditOrder", (req, res) => {
+  r.table("Orders")
   .get(req.query.id)
   .run(openConn, (err, result) => {
     if (err) throw err;
@@ -92,9 +86,8 @@ app.get("/api/EditItem", (req, res) => {
   });
 });
 
-app.post("/api/UpdateItem", (req, res) => {
-  req.body.ProductName=req.body.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-  r.table("Items")
+app.post("/api/UpdateOrder", (req, res) => {
+  r.table("Orders")
     .get(req.body.id)
     .update(req.body)
     .run(openConn, (err, result) => {
@@ -103,9 +96,8 @@ app.post("/api/UpdateItem", (req, res) => {
     });
 });
 
-app.post("/api/NewItem", (req, res) => {
-  req.body.ProductNamereq.body.ProductName.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
-  r.table("Items")
+app.post("/api/NewOrder", (req, res) => {
+  r.table("Orders")
     .insert(req.body)
     .run(openConn, (err, result) => {
       if (err) throw err;
@@ -113,8 +105,8 @@ app.post("/api/NewItem", (req, res) => {
     });
 });
 
-app.post("/api/DeleteItem", (req, res) => {
-  r.table("Items")
+app.post("/api/DeleteOrder", (req, res) => {
+  r.table("Orders")
     .get(req.query.id)
     .delete()
     .run(openConn, (err, result) => {
@@ -125,13 +117,3 @@ app.post("/api/DeleteItem", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
-
-function SetImage(data) {
-  data.map(
-    (x) =>
-      (x.image =
-        "https://demos.telerik.com/kendo-ui/content/web/foods/" +
-        x.ProductID +
-        ".jpg")
-  );
-}
