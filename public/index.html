@@ -49,50 +49,50 @@
           <div id="app">            
             <div style="min-height: 1090px;">
               <!-- Modal Structure -->
-            <div id="EditItemModal" class="modal">
+            <div id="EditOrderModal" class="modal">
               <div class="modal-content">
-                <h4 id="ModalHeader">Add New Item</h4>
+                <h4 id="ModalHeader">Add New Order</h4>
                 <div class="row">
                   <form class="col s12">
                     <div class="row">
                       <div class="input-field col s6">
-                        <input id="ProductName" type="text" maxlength="50">
-                        <label for="ProductName">Product Name</label>
+                        <input id="CustomerName" type="text" maxlength="50">
+                        <label for="CustomerName">Customer Name</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
                       <div class="input-field col s6">
-                        <input id="Units" type="number" min="1" max="10000" onblur="ValidateUnits()">
-                        <label for="Units">Units In Stock</label>
+                        <input id="OrderQuantity" type="number" min="1" max="10000" onblur="ValidateOrderQuantity()">
+                        <label for="OrderQuantity">Quantity In Stock</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
 
                       <div class="input-field col s6">              
                         <i class="material-icons tiny prefix">attach_money</i>
-                        <input id="Price" type="number" min="1" max="10000" onblur="ValidatePrice()">
-                        <label for="Price">Price</label>
+                        <input id="UnitPrice" type="number" min="1" max="10000" onblur="ValidateUnitPrice()">
+                        <label for="UnitPrice">Unit Price</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
                     </div>                        
                     </div>
-                    <input id="ProductID" type="hidden">
+                    <input id="OrderId" type="hidden">
                     <input id="ID" type="hidden">
                   </form>
                 
               </div>
               <div class="modal-footer">
-                <button v-on:click="editOrCreateItem" class="waves-effect waves-green btn-flat"><span id=AddUpdateText></span></button>
+                <button v-on:click="editOrCreateOrder" class="waves-effect waves-green btn-flat"><span id=AddUpdateText></span></button>
               </div>
             </div>
             
             <div class="col s12">
               <div class="input-field col s6">
                 <i class="material-icons prefix">search</i>
-                <label for="search">Search Products</label>
+                <label for="search">Search Orders</label>
                 <input type="text" v-model="query" id="search" maxlength="30" />
               </div>
 
               <div class="col s6 right-align">               
-                <a onclick="NewItemModalShow()" class="btn waves-effect waves-light green"><i class="left material-icons">add</i>Add</span></a>
+                <a onclick="NewOrderModalShow()" class="btn waves-effect waves-light green"><i class="left material-icons">add</i>Add</span></a>
 
                 <a class="btn dropdown-trigger" data-target='PageSizeDropDown'><i class="left material-icons">list</i>Page Size</a>
                   <ul id='PageSizeDropDown' class='dropdown-content'> 
@@ -119,19 +119,19 @@
               >
                 <div style="padding: 10px;width:300px" class="col grey lighten-4 s12 m12 hoverable">
                   <div class="center-align">
-                    <image v-bind:src="item.image"></image>
+                    <i class="large material-icons">business_center</i>
                   </div>
                   <div class="center-align">
                     <div class="truncate" style="font-size: 20px;">
-                      {{item.ProductName}}
+                      {{item["Customer Name"]}}
                     </div>
                     <br />
                     <span style="font-size: 20px;">
-                      Stock:{{ item.UnitsInStock}}
+                      Stock:{{ item["Order Quantity"]}}
                     </span>
                     <br />
                     <span>
-                      Price: ${{item.UnitPrice}}
+                      Price: ${{item["Unit Price"]}}
                     </span>
                   </div>
                   <div class="left" style="margin-top: 10px;">
@@ -252,44 +252,46 @@
       });
 
       socket.on("broadcast", function (data) {
-        vm.updateItem(data);
+        vm.updateOrder(data);
       });
 
-      function NewItemModalShow (){
-        $("#ModalHeader").text("Add New Item");
+      function NewOrderModalShow (){
+        $("#ModalHeader").text("Add New Order");
         $("#AddUpdateText").text("Add");
-        $("#Price").val(formatter.format(1));
-        $("#Units").val(1);
-        $("#ProductName").val(null);
-        $("#ProductID").val(null);
+        $("#CustomerName").val(null);
+        $("#CustomerSegment").val(null);
+        $("#ORderDate").val(null);
+        $("#OrderId").val(null);
+        $("#OrderQuantity").val(null);
+        $("#UnitUnitPrice").val(null);
         $("#ID").val(null);
-        var instance = M.Modal.getInstance($("#EditItemModal"));
+        var instance = M.Modal.getInstance($("#EditOrderModal"));
         M.updateTextFields();
         instance.open();
       }
 
-      function ValidateUnits(){
-        $("#Units").val(Math.round($("#Units").val()));
+      function ValidateOrderQuantity(){
+        $("#OrderQuantity").val(Math.round($("#OrderQuantity").val()));
 
-        if ($("#Units").val()>10000) {
-          $("#Units").val(10000);
+        if ($("#OrderQuantity").val()>10000) {
+          $("#OrderQuantity").val(10000);
         }
 
-        if ($("#Units").val()<=0) {
-          $("#Units").val(1);
+        if ($("#OrderQuantity").val()<=0) {
+          $("#OrderQuantity").val(1);
         }
       }
 
-      function ValidatePrice(){
-        var price=$("#Price").val();
-        $("#Price").val(formatter.format(price));
+      function ValidateUnitPrice(){
+        var UnitPrice=$("#UnitPrice").val();
+        $("#UnitPrice").val(formatter.format(UnitPrice));
 
-        if (price>10000) {
-          $("#Price").val(10000);
+        if (UnitPrice>10000) {
+          $("#UnitPrice").val(10000);
         }
 
-        if (price<=0) {
-          $("#Price").val(1);
+        if (UnitPrice<=0) {
+          $("#UnitPrice").val(1);
         }
       }    
     </script>
