@@ -1,4 +1,13 @@
-var data = [];
+const charBGColor = [
+  "Bisque",
+  "RoyalBlue",
+  "LimeGreen",
+  "linen",
+  "Indigo",
+  "Fuchsia",
+  "Cornsilk",
+  "Red",
+];
 
 var vm = new Vue({
   el: "#app",
@@ -8,12 +17,23 @@ var vm = new Vue({
     pageSize: 10,
     query: "",
     sortId: "",
-    items: data,
+    items: [],
+    productCategories: [],
+    selectedCategory: "(None)",
   },
   methods: {
     getItems: function () {
       $.getJSON("api/Orders", (resData) => {
         this.items = resData;
+        this.productCategories = [
+          ...new Set(_.sortBy(resData.map((x) => x["Product Category"]))),
+        ];
+        this.productCategories.map((val, index, array) => {
+          if (val == "") {
+            array[index] = "(None)";
+          }
+          $("#Cateogories").formSelect();
+        });
       });
     },
     editOrCreateOrder: function () {
@@ -26,9 +46,14 @@ var vm = new Vue({
           .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ""),
         "Order ID": parseInt($("#OrderId").val()),
         "Order Date": new Date(),
-        "Product Category": "",
-        Profit:0,
-        Sales:0,
+        "Product Category": this.selectedCategory,
+        Profit:
+          parseInt($("#OrderQuantity").val()) *
+          parseFloat($("#UnitPrice").val()) *
+          0.9,
+        Sales:
+          parseInt($("#OrderQuantity").val()) *
+          parseFloat($("#UnitPrice").val()),
         "Ship Mode": "",
       };
 
@@ -41,7 +66,7 @@ var vm = new Vue({
       }
 
       if (!$("#ID").val()) {
-        newOrder["Order Id"]= 1;
+        newOrder["Order Id"] = 1;
         url = "api/newOrder";
       } else {
         newOrder.id = $("#ID").val();
@@ -62,6 +87,9 @@ var vm = new Vue({
           instance.close();
           M.toast({ html: jqXHR.responseText, classes: "red yellow-text" });
         },
+      }).always(() => {
+        $("#Cateogories").prop("selectedIndex", 0);
+        $("#Cateogories").formSelect();
       });
     },
     editItem: function (id) {
@@ -78,7 +106,6 @@ var vm = new Vue({
             )}`
           );
 
-          console.log(data);
           $("#UnitPrice").val(formatter.format(data["Unit Price"]));
           $("#OrderQuantity").val(data["Order Quantity"]);
           $("#CustomerName").val(data["Customer Name"]);
@@ -125,7 +152,9 @@ var vm = new Vue({
     getFilteredList: function () {
       var filteredList = this.items.filter(function (Order) {
         return (
-          Order["Customer Name"].toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
+          Order["Customer Name"]
+            .toLowerCase()
+            .indexOf(vm.query.toLowerCase()) !== -1
         );
       });
 
@@ -187,5 +216,179 @@ var vm = new Vue({
   },
   mounted() {
     this.getItems();
+  },
+});
+
+var charts = new Vue({
+  el: "#chartApp",
+  data: {
+    profitData: [],
+    salesData: [],
+    ordersPerCategoryData: [],
+    ordersPerDayData: [],
+    ordersPerDayChartContext: null,
+    ordersPerCategoryContext: null,
+    salesChartContext: null,
+  },
+  methods: {
+    getProfitData: function () {
+      $.getJSON("api/GetProfit", (resData) => {
+        this.profitData = resData;
+      });
+    },
+    getSalesData: function () {
+      $.getJSON("api/GetSales", (resData) => {
+        this.salesData = resData;
+        this.createSalesChart();
+      });
+    },
+    getOrdersPerDayData: function () {
+      $.getJSON("api/OrdersPerDay", (resData) => {
+        this.ordersPerDayData = resData;
+        this.createOrdersPerDayChart();
+      });
+    },
+    getOrdersPerCategoryData: function () {
+      $.getJSON("api/CountPerProductCategory", (resData) => {
+        this.ordersPerCategoryData = resData;
+        this.createOrdersPerCategoryChart();
+      });
+    },
+    createSalesChart: function () {
+      this.salesChartContext = document
+        .getElementById("SalesChart")
+        .getContext("2d");
+      var chart = new Chart(this.salesChartContext, {
+        // The type of chart we want to create
+        type: "bar",
+
+        // The data for our dataset
+        data: {
+          labels: this.salesData.map((x) => x.group),
+          datasets: [
+            {
+              label: "Sales Per Shipping Mode",
+              backgroundColor: charBGColor,
+              data: this.salesData.map((x) => x.reduction),
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  callback: function (value, index, values) {
+                    return "$" + value;
+                  },
+                },
+              },
+            ],
+          },
+        },
+      });
+    },
+    createOrdersPerCategoryChart: function () {
+      this.ordersPerCategoryContext = document
+        .getElementById("OrdersPerCategoryChart")
+        .getContext("2d");
+      var chart = new Chart(this.ordersPerCategoryContext, {
+        // The type of chart we want to create
+        type: "pie",
+        fillOpacity: 0.3,
+        // The data for our dataset
+        data: {
+          labels: this.ordersPerCategoryData.map((x) => x.group),
+          datasets: [
+            {
+              label: "Orders Per Category",
+              backgroundColor: charBGColor,
+              data: this.ordersPerCategoryData.map((x) => x.reduction),
+            },
+          ],
+        },
+
+        // Configuration options go here
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    },
+    createOrdersPerDayChart: function () {
+      for (let index = 0; index < this.ordersPerDayData.length; index++) {
+        this.ordersPerDayData[index].group = new Date(
+          this.ordersPerDayData[index].group
+        );
+      }
+
+      this.salesChartContext = document
+        .getElementById("OrdersPerDayChart")
+        .getContext("2d");
+      var chart = new Chart(this.salesChartContext, {
+        // The type of chart we want to create
+        type: "line",
+        fillOpacity: 0.3,
+        // The data for our dataset
+        data: {
+          labels: _.orderBy(this.ordersPerDayData, "group", "asc").map((x) =>
+            x.group.toLocaleDateString("us")
+          ),
+          datasets: [
+            {
+              label: "Orders Per Day",
+              data: _.orderBy(this.ordersPerDayData, "group", "desc").map(
+                (x) => x.reduction
+              ),
+            },
+          ],
+        },
+
+        // Configuration options go here
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  precision: 0,
+                  // Include a dollar sign in the ticks
+                  callback: function (value, index, values) {
+                    return Math.round(value);
+                  },
+                },
+              },
+            ],
+          },
+        },
+      });
+    },
+    updateData: function (newOrder) {
+      this.getOrdersPerCategoryData();
+      this.getOrdersPerDayData();
+      this.getSalesData();
+      this.getProfitData();
+    },
+  },
+  watch: {
+    salesData: () => {},
+  },
+  created() {
+    this.getProfitData();
+    this.getSalesData();
+    this.getOrdersPerDayData();
+    this.getOrdersPerCategoryData();
+  },
+  computed: {
+    barHeight() {
+      return this.chartHeight / this.salesData.length - 10;
+    },
+    dataMax() {
+      return Math.max(...this.salesData.map((x) => x.reduction));
+    },
   },
 });
