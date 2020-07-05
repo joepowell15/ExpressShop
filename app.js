@@ -23,6 +23,8 @@ var connection = r.connect(
     host: "69.55.55.31",
     port: 28015,
     db: "StoreDB",
+    password: "Wishbone15",
+    user: "admin",
   },
   (err, conn) => {
     if (err) throw err;
@@ -39,15 +41,15 @@ http.listen(3000);
 //   r.table("Orders").run(openConn, (err, cursor) => {
 //     if (err) throw err;
 //     cursor.toArray((err, result) => {
-//       allOrders = result;      
+//       allOrders = result;
 //       var randomIndex = Math.floor(Math.random() * (allOrders.length - 1) + 1);
 //       var newUnitStockAmount=allOrders[randomIndex].UnitsInStock+1;
 //       var id=allOrders[randomIndex].id;
-      
+
 //       r.table("Orders").get(id).update({UnitsInStock:newUnitStockAmount}).run(openConn,(err,result)=>{
 //         if (err) throw err;
 //       });
-//     });   
+//     });
 //   });
 // },5000);
 
@@ -62,7 +64,7 @@ function BeginRealTimeStream() {
       feed.on("error", function (error) {
         throw error;
       });
-      feed.on("data", function (newData) {       
+      feed.on("data", function (newData) {
         io.sockets.emit("broadcast", newData);
       });
     });
@@ -77,13 +79,76 @@ app.get("/api/Orders", (req, res) => {
   });
 });
 
+app.get("/api/GetProfit", (req, res) => {
+  r.table("Orders")
+    .group("Product Category")
+    .getField("Profit")
+    .sum()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        if (result[0].group == "") {
+          result[0].group = "(No Group)";
+        }
+        res.json(result);
+      });
+    });
+});
+
+app.get("/api/GetSales", (req, res) => {
+  r.db("StoreDB")
+    .table("Orders")
+    .group("Product Category")
+    .getField("Sales")
+    .sum()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        if (result[0].group == "") {
+          result[0].group = "(No Group)";
+        }
+        res.json(result);
+      });
+    });
+});
+
+app.get("/api/CountPerProductCategory", (req, res) => {
+  r.db("StoreDB")
+    .table("Orders")
+    .group("Product Category")
+    .getField("id")
+    .count()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        if (result[0].group == "") {
+          result[0].group = "(No Group)";
+        }
+        res.json(result);
+      });
+    });
+});
+
+app.get("/api/OrdersPerDay", (req, res) => {
+  r.table("Orders")
+    .group("Order Date")
+    .getField("id")
+    .count()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        res.json(result);
+      });
+    });
+});
+
 app.get("/api/EditOrder", (req, res) => {
   r.table("Orders")
-  .get(req.query.id)
-  .run(openConn, (err, result) => {
-    if (err) throw err;
-     res.json(result);
-  });
+    .get(req.query.id)
+    .run(openConn, (err, result) => {
+      if (err) throw err;
+      res.json(result);
+    });
 });
 
 app.post("/api/UpdateOrder", (req, res) => {
@@ -92,7 +157,7 @@ app.post("/api/UpdateOrder", (req, res) => {
     .update(req.body)
     .run(openConn, (err, result) => {
       if (err) throw err;
-       res.json(null);
+      res.json(null);
     });
 });
 
@@ -101,7 +166,7 @@ app.post("/api/NewOrder", (req, res) => {
     .insert(req.body)
     .run(openConn, (err, result) => {
       if (err) throw err;
-       res.json(null);
+      res.json(null);
     });
 });
 
