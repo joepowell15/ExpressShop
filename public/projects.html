@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <html class="no-js">
   <!--<![endif]-->
   <head>
@@ -28,9 +24,32 @@
       media="screen,projection"
     />
   </head>
-  <body style="margin-left: 50px; margin-right: 50px;">
-    <div class="col s12 row">
-      <div class="col m2 hide-on-med-and-down">
+  <body>
+    <div class="navbar-fixed" style="margin-bottom: 10px;">
+      <nav>
+        <div class="nav-wrapper">
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger"
+            ><i class="material-icons">menu</i></a
+          >
+          <ul class="right hide-on-med-and-down">
+            <li><a href="stocktracker.html">Stock Tracker</a></li>
+            <li class="active">
+              <a href="projects.html">Projects Overview</a>
+            </li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <ul class="sidenav" id="mobile-demo">
+        <li><a href="stocktracker.html">Stock Tracker</a></li>
+        <li><a href="projects.html">Projects Overview</a></li>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </div>
+
+    <div class="col s12 row" style="margin-left: 50px; margin-right: 50px;">
+      <div class="col s0 m2 hide-on-med-and-down">
         <div>
           <img
             src="/images/netcoreicon.png"
@@ -53,7 +72,7 @@
           <img
             src="/images/csharticon.svg"
             width="350"
-            alt="Javascript Icon"
+            alt="ChartJS Icon"
             class="rellax responsive-img"
             data-rellax-speed="-10"
           />
@@ -62,23 +81,68 @@
           <img
             src="/images/nodejsicon.png"
             width="350"
-            alt="Javascript Icon"
+            alt="NodeJS Icon"
+            class="rellax responsive-img"
+            data-rellax-speed="-10"
+          />
+        </div>
+        <div>
+          <img
+            src="/images/vuejslogo.png"
+            width="350"
+            alt="VueJS Icon"
             class="rellax responsive-img"
             data-rellax-speed="-10"
           />
         </div>
       </div>
-      <div class="col m10">
-        <div class="left-align">
-          <h1 style="font-size: 100px;">Projects</h1>
-          <hr style="background-color: grey;" />
+      <div class="col s12 m10">
+       
+        <div class="col s12">
+          <div class="left-align col m6 s12 rellax" style="margin-bottom: -18px;" data-rellax-speed="7">
+            <span style="font-size: 65px;">Projects</span>
+          </div>
+          <div
+            class="rellax quick-btn-area col m6 s12"
+            style="display: flex; justify-content: flex-end;"
+            data-rellax-speed="7"
+          >
+            <div
+              class="center-align"
+              style="display: flex; flex-wrap: nowrap; width: 60px;"
+            >
+              <a href="https://github.com/joepowell15" target="_blank">
+                <span
+                  ><i class="material-icons medium">code</i
+                  ><span>Github</span></span
+                >
+              </a>
+            </div>
+            <div
+              class="center-align"
+              style="display: flex; flex-wrap: nowrap; width: 60px;"
+            >
+              <a href="">
+                <span
+                  ><i class="material-icons medium">insert_drive_file</i
+                  ><span>Resume</span></span
+                >
+              </a>
+            </div>
+          </div>
         </div>
+
+        <hr
+          class="rellax col s12"
+          data-rellax-speed="7"
+          style="background-color: grey;"
+        />
         <div class="project-holder rellax hoverable" data-rellax-speed="6">
           <div style="width: 100%;">
             <h3>
               Live Stream Ordering App
             </h3>
-            <hr class="grey lighten-3" />
+            <hr />
 
             <div class="col s12">
               <div class="col m12 l6">
@@ -124,7 +188,7 @@
             <h3>
               Stock App
             </h3>
-            <hr class="grey lighten-3" />
+            <hr />
             <div class="col s12">
               <div class="col m12 l6">
                 <ul>
@@ -138,7 +202,7 @@
               </div>
               <div class="col m12 l6">
                 <img
-                  src="/images/orderingapp.png"
+                  src="/images/stocktracker.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
                   class="materialboxed responsive-img valign-wrapper"
@@ -169,7 +233,7 @@
             <h3>
               Order Statistics App
             </h3>
-            <hr class="grey lighten-3" />
+            <hr />
             <div class="col s12">
               <div class="col m12 l6">
                 <ul>
@@ -186,7 +250,7 @@
               </div>
               <div class="col m12 l6">
                 <img
-                  src="/images/orderingapp.png"
+                  src="/images/chartproject.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
                   class="materialboxed responsive-img valign-wrapper"
@@ -213,53 +277,53 @@
         </div>
 
         <div class="project-holder rellax hoverable" data-rellax-speed="0">
-            <div style="width: 100%;">
-              <h3>
-                Portfolio Website
-              </h3>
-              <hr class="grey lighten-3" />
-              <div class="col s12">
-                <div class="col m12 l6">
-                  <ul>
-                    <li><i class="material-icons tiny">code</i> Javascript</li>
-                    <li><i class="material-icons tiny">code</i> Node Js</li>
-                    <li><i class="material-icons tiny">code</i> Express</li>
-                    <li><i class="material-icons tiny">cloud</i>RethinkDB</li>
-                    <li><i class="material-icons tiny">code</i>VueJs</li>
-                    <li><i class="material-icons tiny">web</i>Ubuntu</li>
-                    <li><i class="material-icons tiny">code</i>Materialize</li>
-                    <li>
-                      <i class="material-icons tiny">insert_chart</i>ChartJs
-                    </li>
-                  </ul>
-                </div>
-                <div class="col m12 l6">
-                  <img
-                    src="/images/portfoliopicture.png"
-                    alt="Ordering App Picture"
-                    style="border-radius: 10px; margin: 10px;"
-                    class="materialboxed responsive-img valign-wrapper"
-                  />
-                </div>
+          <div style="width: 100%;">
+            <h3>
+              Portfolio Website
+            </h3>
+            <hr />
+            <div class="col s12">
+              <div class="col m12 l6">
+                <ul>
+                  <li><i class="material-icons tiny">code</i> Javascript</li>
+                  <li><i class="material-icons tiny">code</i> Node Js</li>
+                  <li><i class="material-icons tiny">code</i> Express</li>
+                  <li><i class="material-icons tiny">cloud</i>RethinkDB</li>
+                  <li><i class="material-icons tiny">code</i>VueJs</li>
+                  <li><i class="material-icons tiny">web</i>Ubuntu</li>
+                  <li><i class="material-icons tiny">code</i>Materialize</li>
+                  <li>
+                    <i class="material-icons tiny">insert_chart</i>ChartJs
+                  </li>
+                </ul>
+              </div>
+              <div class="col m12 l6">
+                <img
+                  src="/images/portfoliopicture.png"
+                  alt="Ordering App Picture"
+                  style="border-radius: 10px; margin: 10px;"
+                  class="materialboxed responsive-img valign-wrapper"
+                />
               </div>
             </div>
-  
-            <div
-              style="
-                width: 100%;
-                border-top: 1px solid lightgray;
-                padding: 5px;
-                display: flex;
-                align-self: flex-end;
-                justify-content: space-around;
-              "
-            >
-              <a href="https://github.com/joepowell15/ExpressShop" target="_blank"
-                >Source</a
-              >
-              <a href="index.html">Live Demo</a>
-            </div>
           </div>
+
+          <div
+            style="
+              width: 100%;
+              border-top: 1px solid lightgray;
+              padding: 5px;
+              display: flex;
+              align-self: flex-end;
+              justify-content: space-around;
+            "
+          >
+            <a href="https://github.com/joepowell15/ExpressShop" target="_blank"
+              >Source</a
+            >
+            <a href="index.html">Live Demo</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -274,6 +338,9 @@
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"
     ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.min.js"></script>
+
     <script src="js/materialize.js"></script>
 
     <script>
@@ -281,6 +348,63 @@
 
       $(document).ready(function () {
         $(".materialboxed").materialbox();
+        $(".sidenav").sidenav();
+      });
+
+      var sideImageAnime = anime({
+        targets: ".rellax.responsive-img",
+        opacity: [0, 1],
+        translateY: [400, 0],
+        translateX: [-400, 0],
+        delay: (t, i, l) => {
+          return i * 500;
+        },
+        duration: 2000,
+        easing: "easeInOutSine",
+      });
+
+      var projectsAnime = anime({
+        targets: ".project-holder",
+        opacity: [0, 1],
+        translateY: [100, 0],
+        delay: (t, i, l) => {
+          return i * 500;
+        },
+        duration: 2000,
+        easing: "easeInOutSine",
+      });
+
+      anime({
+        targets: ".nav-wrapper",
+        translateX: [500, 0],
+        duration: 2000,
+        easing: "easeInOutSine",
+      });
+
+      anime({
+        targets: "#ProjectHeader path",
+        strokeDashoffset: [anime.setDashoffset, 0],
+        duration: 5000,
+        easing: "easeInOutSine",
+      });
+
+      anime({
+        targets: "#ProjectHeader path",
+        fill: ["rgba(0,0,0,0)", "#000000"],
+        delay: 3000,
+        easing: "easeInOutSine",
+      });
+
+      anime({
+        targets: ".quick-btn-area",
+        translateX: [500, 0],
+        duration: 2000,
+        easing: "easeInOutSine",
+      });
+
+      $(window).scroll(function () {
+        sideImageAnime.seek(sideImageAnime.duration);
+        projectsAnime.seek(projectsAnime.duration);
       });
     </script>
   </body>

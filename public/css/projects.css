@@ -3,8 +3,28 @@ html {
 }
 
 body {
-  background: rgb(255,255,255);
-  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(209,208,222,1) 100%);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(209, 208, 222, 1) 100%
+  );
+  min-width: 550px;
+}
+
+nav {
+  background-color: white;
+  color: black;
+}
+
+nav ul a,
+nav a,
+nav .brand-logo {
+  color: black;
+}
+
+.sidenav-overlay {
+  z-index: 0;
 }
 
 .project-holder {
@@ -16,7 +36,11 @@ body {
   margin-bottom: 10px;
 }
 
-ul {
+.project-holder a {
+  font-size: 30px;
+}
+
+.project-holder ul {
   columns: 2;
   -webkit-columns: 2;
   -moz-columns: 2;
@@ -26,6 +50,10 @@ ul {
 hr {
   border: none;
   height: 1px;
+}
+
+.project-holder hr{
+  background-color: lightgray;
 }
 
 .container {
