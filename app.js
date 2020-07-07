@@ -1,8 +1,15 @@
 const express = require("express");
 const path = require("path");
 const r = require("rethinkdb");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 var openConn = null;
 const app = express();
+
+const tokenSecret =
+  "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
 
 const logger = (err, eq, res, next) => {
   console.log(err);
@@ -23,6 +30,8 @@ var connection = r.connect(
     host: "69.55.55.31",
     port: 28015,
     db: "StoreDB",
+    user: "admin",
+    password: "Wishbone15",
   },
   (err, conn) => {
     if (err) throw err;
@@ -39,15 +48,15 @@ http.listen(3000);
 //   r.table("Orders").run(openConn, (err, cursor) => {
 //     if (err) throw err;
 //     cursor.toArray((err, result) => {
-//       allOrders = result;      
+//       allOrders = result;
 //       var randomIndex = Math.floor(Math.random() * (allOrders.length - 1) + 1);
 //       var newUnitStockAmount=allOrders[randomIndex].UnitsInStock+1;
 //       var id=allOrders[randomIndex].id;
-      
+
 //       r.table("Orders").get(id).update({UnitsInStock:newUnitStockAmount}).run(openConn,(err,result)=>{
 //         if (err) throw err;
 //       });
-//     });   
+//     });
 //   });
 // },5000);
 
@@ -62,7 +71,7 @@ function BeginRealTimeStream() {
       feed.on("error", function (error) {
         throw error;
       });
-      feed.on("data", function (newData) {       
+      feed.on("data", function (newData) {
         io.sockets.emit("broadcast", newData);
       });
     });
@@ -79,11 +88,70 @@ app.get("/api/Orders", (req, res) => {
 
 app.get("/api/EditOrder", (req, res) => {
   r.table("Orders")
-  .get(req.query.id)
-  .run(openConn, (err, result) => {
-    if (err) throw err;
-     res.json(result);
+    .get(req.query.id)
+    .run(openConn, (err, result) => {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+app.get("/Authenticate", (req, res) => {
+  var token = req.query.token;
+  jwt.verify(token, tokenSecret, (err, verifiedJwt) => {
+    if (err) {
+      res.json({ authenticated: false });
+    } else {
+      res.json({ authenticated: true });
+    }
   });
+});
+
+app.post("/Register", (req, res) => {
+  var user = req.body;
+  bcrypt.hash(user.password, saltRounds, function (err, hash) {
+    Register({ username: user.username, password: hash });
+    res.json({});
+  });
+});
+
+app.post("/Login", (req, res) => {
+  var user = req.body;
+  r.table("TaskUsers")
+    .filter({ username: user.username })
+    .getField("password")
+    .limit(1)
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        var hash = result[0];
+
+        if (!hash) {
+          return res.json(null);
+        }
+
+        bcrypt.compare(user.password, hash, function (err, success) {
+          if (err) throw err;
+
+          if (success) {
+            var token = jwt.sign(user.username, tokenSecret);
+            res.json({ token, username: user.username });
+          } else {
+            res.json(null);
+          }
+        });
+      });
+    });
+});
+
+app.get("/CheckUsername", (req, res) => {
+  var username = req.query.username;
+
+  r.table("TaskUsers")
+    .filter({ username })
+    .count()
+    .run(openConn, (err, count) => {
+      res.json({ usernameFree: count == 0 });
+    });
 });
 
 app.post("/api/UpdateOrder", (req, res) => {
@@ -92,7 +160,7 @@ app.post("/api/UpdateOrder", (req, res) => {
     .update(req.body)
     .run(openConn, (err, result) => {
       if (err) throw err;
-       res.json(null);
+      res.json(null);
     });
 });
 
@@ -101,7 +169,7 @@ app.post("/api/NewOrder", (req, res) => {
     .insert(req.body)
     .run(openConn, (err, result) => {
       if (err) throw err;
-       res.json(null);
+      res.json(null);
     });
 });
 
@@ -117,3 +185,11 @@ app.post("/api/DeleteOrder", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+
+function Register(user) {
+  r.table("TaskUsers")
+    .insert(user)
+    .run(openConn, (err, result) => {
+      if (err) throw err;
+    });
+}
