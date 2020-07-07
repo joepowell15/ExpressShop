@@ -134,7 +134,6 @@ app.post("/Login", (req, res) => {
 
           if (success) {
             var token = jwt.sign(user.username, tokenSecret);
-            user.token = token;
             res.json({ token, username: user.username });
           } else {
             res.json(null);
