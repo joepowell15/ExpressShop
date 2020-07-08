@@ -100,6 +100,69 @@ app.get("/api/Orders", (req, res) => {
   });
 });
 
+app.get("/api/GetProfit", (req, res) => {
+  r.table("Orders")
+    .group("Product Category")
+    .getField("Profit")
+    .sum()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        if (result[0].group == "") {
+          result[0].group = "(No Group)";
+        }
+        res.json(result);
+      });
+    });
+});
+
+app.get("/api/GetSales", (req, res) => {
+  r.db("StoreDB")
+    .table("Orders")
+    .group("Product Category")
+    .getField("Sales")
+    .sum()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        if (result[0].group == "") {
+          result[0].group = "(No Group)";
+        }
+        res.json(result);
+      });
+    });
+});
+
+app.get("/api/CountPerProductCategory", (req, res) => {
+  r.db("StoreDB")
+    .table("Orders")
+    .group("Product Category")
+    .getField("id")
+    .count()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        if (result[0].group == "") {
+          result[0].group = "(No Group)";
+        }
+        res.json(result);
+      });
+    });
+});
+
+app.get("/api/OrdersPerDay", (req, res) => {
+  r.table("Orders")
+    .group("Order Date")
+    .getField("id")
+    .count()
+    .run(openConn, (err, cursor) => {
+      if (err) throw err;
+      cursor.toArray((err, result) => {
+        res.json(result);
+      });
+    });
+});
+
 app.get("/api/EditOrder", (req, res) => {
   r.table("Orders")
     .get(req.query.id)
