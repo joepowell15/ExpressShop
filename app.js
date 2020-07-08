@@ -46,8 +46,8 @@ var connection = r.connect(
     host: "69.55.55.31",
     port: 28015,
     db: "StoreDB",
-    user: "admin",
     password: "Wishbone15",
+    user: "admin",
   },
   (err, conn) => {
     if (err) throw err;
