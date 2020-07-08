@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const r = require("rethinkdb");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -18,7 +19,19 @@ const logger = (err, eq, res, next) => {
 
 app.use(logger);
 
-var http = require("http").Server(app);
+if (process.env.NODE_ENV=="prod") {
+  const options={
+    key:fs.readFileSync('/etc/letsencrypt/live/www.jovaughnpowell.com/privkey.pem'),
+    cert:fs.readFileSync('/etc/letsencrypt/live/www.jovaughnpowell.com/fullchain.pem')
+  };
+  
+  var http = require("https").CreateServer(options,app);
+}
+else{
+  var http = require("http").Server(app);  
+  http.listen(3000);
+}
+
 var io = require("socket.io")(http);
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -41,7 +54,7 @@ var connection = r.connect(
   }
 );
 
-http.listen(3000);
+
 
 // setInterval(() => {
 //   var allOrders = [];
