@@ -41,8 +41,7 @@
       </div>
     </div>
 
-    <div class="container">
-      
+    <div class="container center-align">      
       <div class="section">
         <div class="row">
           <div id="app">            
@@ -54,22 +53,33 @@
                 <div class="row">
                   <form class="col s12">
                     <div class="row">
-                      <div class="input-field col s6">
+                      <div class="input-field col s12 m6">
                         <input id="CustomerName" type="text" maxlength="50">
                         <label for="CustomerName">Customer Name</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
-                      <div class="input-field col s6">
+
+                      <div class="input-field col s12 m6">
                         <input id="OrderQuantity" type="number" min="1" max="10000" onblur="ValidateOrderQuantity()">
-                        <label for="OrderQuantity">Quantity In Stock</label>
+                        <label for="OrderQuantity">Quantity</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
 
-                      <div class="input-field col s6">              
+                      <div class="input-field col s12 m6">              
                         <i class="material-icons tiny prefix">attach_money</i>
                         <input id="UnitPrice" type="number" min="1" max="10000" onblur="ValidateUnitPrice()">
-                        <label for="UnitPrice">Unit Price</label>
+                        <label for="UnitPrice">Price</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
+                      </div>
+
+                      <div class="input-field col s12 m6">
+                          <select id="Cateogories" v-model="selectedCategory">
+                            <option value="(None)">(None)</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                            <option value="Technology">Technology</option>
+                          </select>
+                          <label for="Cateogories">Category</label>
                       </div>
                     </div>                        
                     </div>
@@ -91,16 +101,16 @@
               </div>
 
               <div class="col s6 right-align">               
-                <a onclick="NewOrderModalShow()" class="btn waves-effect waves-light green"><i class="left material-icons">add</i>Add</span></a>
+                <a onclick="NewOrderModalShow()" class="btn waves-effect waves-light green action-btn"><i class="left material-icons">add</i>Add</span></a>
 
-                <a class="btn dropdown-trigger" data-target='PageSizeDropDown'><i class="left material-icons">list</i>Page Size</a>
+                <a class="btn dropdown-trigger action-btn" data-target='PageSizeDropDown'><i class="left material-icons">list</i>Page Size</a>
                   <ul id='PageSizeDropDown' class='dropdown-content'> 
                     <li><a  href="#!" v-on:click="pageSize=10">10</a></li>
                     <li><a  href="#!" v-on:click="pageSize=30">30</a></li>
                     <li><a  href="#!" v-on:click="pageSize=60">60</a></li>
                   </ul>
 
-                  <a class="btn dropdown-trigger" data-target='dropdown1'><i class="left material-icons">sort</i>Sort</a>
+                  <a class="btn dropdown-trigger action-btn" data-target='dropdown1'><i class="left material-icons">sort</i>Sort</a>
                     <ul id='dropdown1' class='dropdown-content'>                     
                       <li><a id="AscendingPrice" v-on:click="sortElements('AscendingPrice')" href="#!"><i class="material-icons">arrow_downward</i>Price Low To High</a></li>
                       <li><a id="DescendingPrice"  v-on:click="sortElements('DescendingPrice')"><i class="material-icons">arrow_upward</i>Price High To Low</a></li>                    
@@ -183,24 +193,31 @@
       </div>
     </div>
 
-    <div class="container">
+    <div id="chartApp" class="container">
       <div class="section">
         <div class="row">
           <div class="col s12 center">
             <h3><i class="mdi-content-send brown-text"></i></h3>
-            <h4>Contact Me</h4>
-            <p class="left-align light">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-              scelerisque id nunc nec volutpat. Etiam pellentesque tristique
-              arcu, non consequat magna fermentum ac. Cras ut ultricies eros.
-              Maecenas eros justo, ullamcorper a sapien id, viverra ultrices
-              eros. Morbi sem neque, posuere et pretium eget, bibendum
-              sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis
-              nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa
-              odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget
-              dignissim mauris, non tristique erat. Vestibulum ante ipsum primis
-              in faucibus orci luctus et ultrices posuere cubilia Curae;
-            </p>
+            <h4>Profit Per Category</h4>
+            <div style="display: flex;justify-content: space-evenly;">
+              <div style="margin-right:20px;" class="left" v-for="group in profitData">
+                <span v-bind:class="{ 'red-text': group.reduction<0 }" style="font-size: 70px;">${{group.reduction.toFixed(2)}} </span>
+                <span v-bind:class="{ 'red-text': group.reduction<0 }" style="font-size: 30px;display: block;">{{group.group}}</span>           
+              </div>
+            </div>
+            <hr/>
+            <div class="col s12"> 
+              <div class="left col s4" >
+                <canvas height="400" id="SalesChart"></canvas>
+              </div>
+
+              <div class="left col s8" >
+                <canvas height="400" id="OrdersPerDayChart"></canvas>
+              </div>
+            </div>
+            <div class="center col s12" >
+              <canvas height="400" id="OrdersPerCategoryChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -219,8 +236,9 @@
       <div class="parallax">
         <img src="background3.jpg" alt="Unsplashed background img 3" />
       </div>
-    </div>    
+    </div> 
 
+      </script>
     <!--  Scripts-->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
    
@@ -229,6 +247,7 @@
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="js/materialize.js"></script>
     <script src="js/init.js"></script>
     <script
@@ -237,7 +256,9 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+
     <script src="/js/vue.js"></script>
+
     <script>
       const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,      
@@ -252,6 +273,7 @@
 
       socket.on("broadcast", function (data) {
         vm.updateOrder(data);
+        vz.updateData(data);
       });
 
       function NewOrderModalShow (){
@@ -259,10 +281,10 @@
         $("#AddUpdateText").text("Add");
         $("#CustomerName").val(null);
         $("#CustomerSegment").val(null);
-        $("#ORderDate").val(null);
+        $("#OrderDate").val(null);
         $("#OrderId").val(null);
-        $("#OrderQuantity").val(null);
-        $("#UnitUnitPrice").val(null);
+        $("#OrderQuantity").val(1);
+        $("#UnitPrice").val(1.00);
         $("#ID").val(null);
         var instance = M.Modal.getInstance($("#EditOrderModal"));
         M.updateTextFields();
@@ -279,6 +301,7 @@
         if ($("#OrderQuantity").val()<=0) {
           $("#OrderQuantity").val(1);
         }
+        M.updateTextFields();
       }
 
       function ValidateUnitPrice(){
@@ -292,6 +315,7 @@
         if (UnitPrice<=0) {
           $("#UnitPrice").val(1);
         }
+        M.updateTextFields();
       }    
     </script>
   </body>
