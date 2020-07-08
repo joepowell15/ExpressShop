@@ -19,16 +19,19 @@ const logger = (err, eq, res, next) => {
 
 app.use(logger);
 
-if (process.env.NODE_ENV=="prod") {
-  const options={
-    key:fs.readFileSync('/etc/letsencrypt/live/www.jovaughnpowell.com/privkey.pem'),
-    cert:fs.readFileSync('/etc/letsencrypt/live/www.jovaughnpowell.com/fullchain.pem')
+if (process.env.NODE_ENV == "prod") {
+  const options = {
+    key: fs.readFileSync(
+      "/etc/letsencrypt/live/www.jovaughnpowell.com/privkey.pem"
+    ),
+    cert: fs.readFileSync(
+      "/etc/letsencrypt/live/www.jovaughnpowell.com/fullchain.pem"
+    ),
   };
-  
-  var http = require("https").CreateServer(options,app);
-}
-else{
-  var http = require("http").Server(app);  
+
+  var http = require("https").createServer(options, app);
+} else {
+  var http = require("http").Server(app);
   http.listen(3000);
 }
 
@@ -53,8 +56,6 @@ var connection = r.connect(
     BeginRealTimeStream();
   }
 );
-
-
 
 // setInterval(() => {
 //   var allOrders = [];
@@ -197,7 +198,9 @@ app.post("/api/DeleteOrder", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+if (process.env.NODE_ENV != "prod") {
+  app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+}
 
 function Register(user) {
   r.table("TaskUsers")
