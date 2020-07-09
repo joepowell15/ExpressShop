@@ -1,0 +1,54 @@
+<div class="navbar-fixed" style="margin-bottom: 10px;">
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#!" data-target="mobile-demo" class="sidenav-trigger"
+        ><i class="material-icons">menu</i></a
+      >
+      <ul class="right hide-on-med-and-down">
+        <li id="Index">
+          <a href="index.html" class="hoverable"
+            ><i class="small material-icons left amber-text">home</i>Home</a
+          >
+        </li>
+        <li id="Stock">
+          <a href="stockTracker.html" class="hoverable"
+            ><i class="large material-icons left red-text">pie_chart</i>Stock
+            Tracker</a
+          >
+        </li>
+        <li id="Projects">
+          <a href="projects.html" class="hoverable"
+            ><i class="small material-icons left light-blue-text">burst_mode</i>Projects
+            Overview</a
+          >
+        </li>
+        <li id="NavLogin" class="hide">
+          <a href="Login.html" class="hoverable"
+            ><i class="small material-icons left">account_circle</i>Login</a
+          >
+        </li>
+        <li id="Profile" class="hide">
+          <a href="#!" class="dropdown-trigger waves-effect waves-light" data-target="ProfileDropdown"
+            ><i class="small material-icons left green-text">account_circle</i
+            ><span id="TokenUsername"></span
+            ><i class="small material-icons right">arrow_drop_down</i></a
+          >
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="stocktracker.html">Stock Tracker</a></li>
+    <li><a href="projects.html">Projects Overview</a></li>
+    <li>
+      <i class="material-icons">account_circle</i
+      ><a href="Login.html">Login</a>
+    </li>
+  </ul>
+</div>
+
+<ul id="ProfileDropdown" class="dropdown-content">
+  <li><a href="#!" onclick="Logoff()">Logoff</a></li>
+</ul>

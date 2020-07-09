@@ -18,6 +18,13 @@
       media="screen,projection"
     />
     <link
+      href="css/site.css"
+      type="text/css"
+      rel="stylesheet"
+      media="screen,projection"
+    />
+
+    <link
       href="css/projects.css"
       type="text/css"
       rel="stylesheet"
@@ -25,28 +32,7 @@
     />
   </head>
   <body>
-    <div class="navbar-fixed" style="margin-bottom: 10px;">
-      <nav>
-        <div class="nav-wrapper">
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"
-            ><i class="material-icons">menu</i></a
-          >
-          <ul class="right hide-on-med-and-down">
-            <li><a href="stocktracker.html">Stock Tracker</a></li>
-            <li class="active">
-              <a href="projects.html">Projects Overview</a>
-            </li>
-            <li><a href="index.html">Home</a></li>
-          </ul>
-        </div>
-      </nav>
-
-      <ul class="sidenav" id="mobile-demo">
-        <li><a href="stocktracker.html">Stock Tracker</a></li>
-        <li><a href="projects.html">Projects Overview</a></li>
-        <li><a href="index.html">Home</a></li>
-      </ul>
-    </div>
+    <div id="navbar-placeholder" style="margin-bottom: 10px;"></div>
 
     <div class="col s12 row" style="margin-left: 50px; margin-right: 50px;">
       <div class="col s0 m2 hide-on-med-and-down">
@@ -97,9 +83,12 @@
         </div>
       </div>
       <div class="col s12 m10">
-       
         <div class="col s12">
-          <div class="left-align col m6 s12 rellax" style="margin-bottom: -18px;" data-rellax-speed="7">
+          <div
+            class="left-align col m6 s12 rellax"
+            style="margin-bottom: -18px;"
+            data-rellax-speed="7"
+          >
             <span style="font-size: 65px;">Projects</span>
           </div>
           <div
@@ -160,7 +149,7 @@
                   src="/images/orderingapp.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="materialboxed responsive-img valign-wrapper"
+                  class="responsive-img valign-wrapper"
                 />
               </div>
             </div>
@@ -205,7 +194,7 @@
                   src="/images/stocktracker.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="materialboxed responsive-img valign-wrapper"
+                  class="responsive-img valign-wrapper"
                 />
               </div>
             </div>
@@ -253,7 +242,7 @@
                   src="/images/chartproject.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="materialboxed responsive-img valign-wrapper"
+                  class="responsive-img valign-wrapper"
                 />
               </div>
             </div>
@@ -302,7 +291,7 @@
                   src="/images/portfoliopicture.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="materialboxed responsive-img valign-wrapper"
+                  class="responsive-img valign-wrapper"
                 />
               </div>
             </div>
@@ -342,13 +331,19 @@
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.min.js"></script>
 
     <script src="js/materialize.js"></script>
+    <script src="js/site.js"></script>
 
     <script>
-      var rellax = new Rellax(".rellax");
+      var rellax;
+
+      $("#navbar-placeholder").load("navbar.html", () => {
+        $("ul #Projects").addClass("active");
+      });
 
       $(document).ready(function () {
-        $(".materialboxed").materialbox();
-        $(".sidenav").sidenav();
+        setTimeout(() => {
+          rellax = new Rellax(".rellax");
+        }, 4000);
       });
 
       var sideImageAnime = anime({
@@ -400,11 +395,6 @@
         translateX: [500, 0],
         duration: 2000,
         easing: "easeInOutSine",
-      });
-
-      $(window).scroll(function () {
-        sideImageAnime.seek(sideImageAnime.duration);
-        projectsAnime.seek(projectsAnime.duration);
       });
     </script>
   </body>
