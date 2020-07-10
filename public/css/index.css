@@ -1,9 +1,10 @@
-p {
-  line-height: 2rem;
-}
 body,html
 {
    background: unset;
+}
+
+p {
+  line-height: 2rem;
 }
 
 .sidenav-trigger {
