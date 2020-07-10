@@ -27,7 +27,7 @@ if (process.env.NODE_ENV == "prod") {
     ),
   };
 
-  var http = require("https").createServer(options, app);
+  var http = require("https").createServer(options, app).listen(443);
 } else {
   var http = require("http").Server(app);
   http.listen(3000);
