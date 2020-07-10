@@ -105,14 +105,16 @@ var vm = new Vue({
               ""
             )}`
           );
-
+          
           $("#UnitPrice").val(formatter.format(data["Unit Price"]));
           $("#OrderQuantity").val(data["Order Quantity"]);
+          $("#Cateogories").val(data["Product Category"]);
           $("#CustomerName").val(data["Customer Name"]);
           $("#OrderId").val(data["Order ID"]);
           $("#ID").val(data.id);
           $("#AddUpdateText").text("Update");
           var instance = M.Modal.getInstance($("#EditOrderModal"));
+          $("#Cateogories").formSelect();
           M.updateTextFields();
           instance.open();
         },

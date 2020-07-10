@@ -67,7 +67,7 @@
 
                       <div class="input-field col s12 m6">              
                         <i class="material-icons tiny prefix">attach_money</i>
-                        <input id="UnitPrice" type="number" min="1" max="10000" onblur="ValidateUnitPrice()">
+                        <input id="UnitPrice" type="number" min=".01" max="10000" onblur="ValidateUnitPrice()">
                         <label for="UnitPrice">Price</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
@@ -273,7 +273,7 @@
 
       socket.on("broadcast", function (data) {
         vm.updateOrder(data);
-        vz.updateData(data);
+        charts.updateData(data);
       });
 
       socket.on("socketError", function (error) {

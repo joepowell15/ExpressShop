@@ -5,9 +5,14 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const helmet = require("helmet");
 const saltRounds = 10;
 var openConn = null;
 const app = express();
+
+//schemas
+var loginSchema = require("./public/js/schemas/loginSchema");
+var orderSchema = require("./public/js/schemas/orderSchema");
 
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
@@ -30,6 +35,7 @@ if (process.env.NODE_ENV == "prod") {
 
 var io = require("socket.io")(http);
 
+app.use(helmet());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -90,7 +96,6 @@ app.get("/api/Orders", (req, res, next) => {
 
     cursor.toArray((err, result) => {
       if (err) return next(err);
-
       res.json(result);
     });
   });
@@ -192,6 +197,12 @@ app.get("/Authenticate", (req, res, next) => {
 
 app.post("/Register", (req, res, next) => {
   var user = req.body;
+
+  var result = loginSchema.validate(req.body);
+
+  if (result.error)
+    return res.status(422).send(result.error.details[0].message);
+
   bcrypt.hash(user.password, saltRounds, function (err, hash) {
     if (err) return next(err);
 
@@ -202,6 +213,12 @@ app.post("/Register", (req, res, next) => {
 
 app.post("/Login", (req, res, next) => {
   var user = req.body;
+
+  var result = loginSchema.validate(req.body);
+
+  if (result.error)
+    return res.status(422).send(result.error.details[0].message);
+
   r.table("TaskUsers")
     .filter({ username: user.username })
     .getField("password")
@@ -243,6 +260,12 @@ app.get("/CheckUsername", (req, res, next) => {
 });
 
 app.post("/api/UpdateOrder", (req, res, next) => {
+
+  var result = orderSchema.validate(req.body);
+
+  if (result.error)
+    return res.status(422).send(result.error.details[0].message);
+
   r.table("Orders")
     .get(req.body.id)
     .update(req.body)
@@ -253,6 +276,11 @@ app.post("/api/UpdateOrder", (req, res, next) => {
 });
 
 app.post("/api/NewOrder", (req, res, next) => {
+  var result = orderSchema.validate(req.body);
+
+  if (result.error)
+    return res.status(422).send(result.error.details[0].message);
+
   r.table("Orders")
     .insert(req.body)
     .run(openConn, (err, result) => {
