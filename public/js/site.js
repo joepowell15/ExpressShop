@@ -1,4 +1,14 @@
 $(() => {
+  $(".parallax").parallax();
+});
+
+function Logoff() {
+  document.cookie =
+    "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  window.location.href = "login.html";
+}
+
+function CheckForAuthentication() {
   var cookie = document.cookie.split("authToken=")[1];
   var token = null;
   if (cookie) {
@@ -19,15 +29,6 @@ $(() => {
   } else {
     ShowProfile(false);
   }
-
-  $(".sidenav").sidenav();
-  $(".parallax").parallax();
-});
-
-function Logoff() {
-  document.cookie =
-    "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  window.location.href = "login.html";
 }
 
 function ShowProfile(show) {

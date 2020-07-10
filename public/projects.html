@@ -107,7 +107,7 @@
                 >
               </a>
             </div>
-            <div
+            <!-- <div
               class="center-align"
               style="display: flex; flex-wrap: nowrap; width: 60px;"
             >
@@ -117,7 +117,7 @@
                   ><span>Resume</span></span
                 >
               </a>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -149,7 +149,7 @@
                   src="/images/orderingapp.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="responsive-img valign-wrapper"
+                  class="responsive-img"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@
               justify-content: space-around;
             "
           >
-            <a href="https://github.com/joepowell15/ExpressShop" target="_blank"
+            <a href="https://github.com/joepowell15/ExpressShop/blob/master/public/index.html" target="_blank"
               >Source</a
             >
             <a href="index.html">Live Demo</a>
@@ -194,7 +194,7 @@
                   src="/images/stocktracker.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="responsive-img valign-wrapper"
+                  class="responsive-img"
                 />
               </div>
             </div>
@@ -210,10 +210,10 @@
               justify-content: space-around;
             "
           >
-            <a href="https://github.com/joepowell15/ExpressShop" target="_blank"
+            <a href="https://github.com/joepowell15/StockTracker/blob/master/StockTracker/StockTracker.html" target="_blank"
               >Source</a
             >
-            <a href="index.html">Live Demo</a>
+            <a href="stockTracker.html">Live Demo</a>
           </div>
         </div>
 
@@ -242,7 +242,7 @@
                   src="/images/chartproject.png"
                   alt="Ordering App Picture"
                   style="border-radius: 10px; margin: 10px;"
-                  class="responsive-img valign-wrapper"
+                  class="responsive-img"
                 />
               </div>
             </div>
@@ -258,7 +258,7 @@
               justify-content: space-around;
             "
           >
-            <a href="https://github.com/joepowell15/ExpressShop" target="_blank"
+            <a href="https://github.com/joepowell15/ExpressShop/blob/master/public/index.html" target="_blank"
               >Source</a
             >
             <a href="index.html">Live Demo</a>
@@ -309,8 +309,6 @@
           >
             <a href="https://github.com/joepowell15/ExpressShop" target="_blank"
               >Source</a
-            >
-            <a href="index.html">Live Demo</a>
           </div>
         </div>
       </div>
@@ -334,17 +332,11 @@
     <script src="js/site.js"></script>
 
     <script>
-      var rellax;
-
       $("#navbar-placeholder").load("navbar.html", () => {
         $("ul #Projects").addClass("active");
-      });
-
-      $(document).ready(function () {
-        setTimeout(() => {
-          rellax = new Rellax(".rellax");
-        }, 4000);
-      });
+        CheckForAuthentication();
+        $(".sidenav").sidenav();
+      });     
 
       var sideImageAnime = anime({
         targets: ".rellax.responsive-img",

@@ -1,12 +1,3 @@
-body {
-  background: rgb(255, 255, 255);
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(89, 80, 255, .5) 100%
-  );
-}
-
 .icon-block {
   padding: 0 15px;
 }
