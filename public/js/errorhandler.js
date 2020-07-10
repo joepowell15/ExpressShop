@@ -1,6 +1,5 @@
 $.ajaxSetup({
   error: function (jqXHR, status, errorThrown) {
-    console.log(jqXHR);
     var errormsg = jqXHR.responseJSON.error;
     ShowError(errormsg);
   },
