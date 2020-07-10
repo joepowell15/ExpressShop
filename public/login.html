@@ -99,7 +99,8 @@
       <script src="js/materialize.js"></script>      
       <script src="js/site.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js" integrity="sha512-LfB+BcvR3zBt7ebVskhSWiSbEUiG3p5EcCprkieldsKhBeR6wpnLi0VpWC2GNgVGWP2n/skO8Bx2oKNjUhXCkw==" crossorigin="anonymous"></script>
-
+      <script src="/js/errorhandler.js"></script>
+      
       <script>
           var login=null;
           var reister=null;
@@ -230,7 +231,7 @@
           })
 
           function ValidatePassword(password,isRegistering) {
-            if (password.length<5) {
+            if (password.length<=5) {
                 M.toast({html: 'Password must be at least 6 Characters', classes: "red yellow-text" });
                 Shake();
                 return false;
@@ -249,7 +250,7 @@
           }
 
           function ValidateUserName(username,isRegistering) {
-              if (username.length<5) {
+              if (username.length<=5) {
                 M.toast({html: 'Username must be at least 6 Characters', classes: "red yellow-text" });
                 Shake();
                 return false;

@@ -76,7 +76,7 @@
 
                       <div class="input-field col s12 m6">              
                         <i class="material-icons tiny prefix">attach_money</i>
-                        <input id="UnitPrice" type="number" min="1" max="10000" onblur="ValidateUnitPrice()">
+                        <input id="UnitPrice" type="number" min=".01" max="10000" onblur="ValidateUnitPrice()">
                         <label for="UnitPrice">Price</label>
                         <span class="helper-text" data-error="Required" data-success=""></span>
                       </div>
@@ -265,6 +265,7 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
 
+    <script src="/js/errorhandler.js"></script>
     <script src="/js/vue.js"></script>
     <script src="/js/site.js"></script>
 
@@ -289,6 +290,10 @@
       socket.on("broadcast", function (data) {
         vm.updateOrder(data);
         charts.updateData(data);
+      });
+
+      socket.on("socketError", function (error) {
+        ShowError(data);
       });
 
       function NewOrderModalShow (){
