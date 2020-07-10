@@ -15,16 +15,25 @@
       type="text/css"
       rel="stylesheet"
       media="screen,projection"
-    />
+    /> 
+
     <link
-      href="css/style.css"
-      type="text/css"
-      rel="stylesheet"
-      media="screen,projection"
-    />
-  </head>
+    href="css/site.css"
+    type="text/css"
+    rel="stylesheet"
+    media="screen,projection"
+  />
+
+  <link
+  href="css/index.css"
+  type="text/css"
+  rel="stylesheet"
+  media="screen,projection"
+/>
+  </head> 
 
   <body>  
+    <div id="navbar-placeholder" style="margin-bottom: 10px;"></div>
 
     <div id="index-banner" class="parallax-container">
       <div class="section no-pad-bot">
@@ -37,7 +46,7 @@
         </div>
       </div>
       <div class="parallax">
-        <img src="background1.jpg" alt="Unsplashed background img 1" />
+        <img src="images/background1.jpg" alt="Leaves" />
       </div>
     </div>
 
@@ -189,7 +198,7 @@
         </div>
       </div>
       <div class="parallax">
-        <img src="background2.jpg" alt="Unsplashed background img 2" />
+        <img src="images/background2.jpg" alt="Lion" />
       </div>
     </div>
 
@@ -234,7 +243,7 @@
         </div>
       </div>
       <div class="parallax">
-        <img src="background3.jpg" alt="Unsplashed background img 3" />
+        <img src="images/background3.jpg" alt="Large body of water" />
       </div>
     </div> 
 
@@ -249,7 +258,6 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="js/materialize.js"></script>
-    <script src="js/init.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"
       integrity="sha256-OgiHfllOBEOiWQ2OcBsDncRG2k7QBW9Rs1dB7MH2N2s="
@@ -259,14 +267,22 @@
 
     <script src="/js/errorhandler.js"></script>
     <script src="/js/vue.js"></script>
-    <script>
+    <script src="/js/site.js"></script>
+
+    <script>      
+      $("#navbar-placeholder").load("navbar.html",()=>{        
+        $("ul #Index").addClass("active");
+        CheckForAuthentication();
+        $(".sidenav").sidenav();
+      });
+      
       const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,      
         maximumFractionDigits: 2,
       });
       var socket = io();
 
-      $(()=>{
+      $(()=>{        
         $('.dropdown-trigger').dropdown({constrainWidth:false});
         $('.modal').modal();
       });

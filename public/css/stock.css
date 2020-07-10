@@ -1,0 +1,19 @@
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+.stock-area {
+  border: 1px solid lightgrey;
+  height: 450px;
+  width: 100%;
+}
+
+#toast-container {
+  top: 1% !important;
+  right: auto !important;
+  bottom: auto%;
+  left: auto;
+}
