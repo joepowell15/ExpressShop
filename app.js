@@ -12,13 +12,6 @@ const app = express();
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
 
-const logger = (err, eq, res, next) => {
-  console.log(err);
-  next(err);
-};
-
-app.use(logger);
-
 if (process.env.NODE_ENV == "prod") {
   const options = {
     key: fs.readFileSync(
@@ -83,7 +76,7 @@ function BeginRealTimeStream() {
       }
 
       feed.on("error", function (error) {
-        throw error;
+        io.sockets.emit("socketError", error);
       });
       feed.on("data", function (newData) {
         io.sockets.emit("broadcast", newData);
@@ -91,23 +84,29 @@ function BeginRealTimeStream() {
     });
 }
 
-app.get("/api/Orders", (req, res) => {
+app.get("/api/Orders", (req, res, next) => {
   r.table("Orders").run(openConn, (err, cursor) => {
-    if (err) throw err;
+    if (err) return next(err);
+
     cursor.toArray((err, result) => {
+      if (err) return next(err);
+
       res.json(result);
     });
   });
 });
 
-app.get("/api/GetProfit", (req, res) => {
+app.get("/api/GetProfit", (req, res, next) => {
   r.table("Orders")
     .group("Product Category")
     .getField("Profit")
     .sum()
     .run(openConn, (err, cursor) => {
-      if (err) throw err;
+      if (err) return next(err);
+
       cursor.toArray((err, result) => {
+        if (err) return next(err);
+
         if (result[0].group == "") {
           result[0].group = "(No Group)";
         }
@@ -116,15 +115,18 @@ app.get("/api/GetProfit", (req, res) => {
     });
 });
 
-app.get("/api/GetSales", (req, res) => {
+app.get("/api/GetSales", (req, res, next) => {
   r.db("StoreDB")
     .table("Orders")
     .group("Product Category")
     .getField("Sales")
     .sum()
     .run(openConn, (err, cursor) => {
-      if (err) throw err;
+      if (err) return next(err);
+
       cursor.toArray((err, result) => {
+        if (err) return next(err);
+
         if (result[0].group == "") {
           result[0].group = "(No Group)";
         }
@@ -133,15 +135,18 @@ app.get("/api/GetSales", (req, res) => {
     });
 });
 
-app.get("/api/CountPerProductCategory", (req, res) => {
+app.get("/api/CountPerProductCategory", (req, res, next) => {
   r.db("StoreDB")
     .table("Orders")
     .group("Product Category")
     .getField("id")
     .count()
     .run(openConn, (err, cursor) => {
-      if (err) throw err;
+      if (err) return next(err);
+
       cursor.toArray((err, result) => {
+        if (err) return next(err);
+
         if (result[0].group == "") {
           result[0].group = "(No Group)";
         }
@@ -150,29 +155,31 @@ app.get("/api/CountPerProductCategory", (req, res) => {
     });
 });
 
-app.get("/api/OrdersPerDay", (req, res) => {
+app.get("/api/OrdersPerDay", (req, res, next) => {
   r.table("Orders")
     .group("Order Date")
     .getField("id")
     .count()
     .run(openConn, (err, cursor) => {
-      if (err) throw err;
+      if (err) return next(err);
+
       cursor.toArray((err, result) => {
+        if (err) return next(err);
         res.json(result);
       });
     });
 });
 
-app.get("/api/EditOrder", (req, res) => {
+app.get("/api/EditOrder", (req, res, next) => {
   r.table("Orders")
     .get(req.query.id)
     .run(openConn, (err, result) => {
-      if (err) throw err;
+      if (err) return next(err);
       res.json(result);
     });
 });
 
-app.get("/Authenticate", (req, res) => {
+app.get("/Authenticate", (req, res, next) => {
   var token = req.query.token;
   jwt.verify(token, tokenSecret, (err, verifiedJwt) => {
     if (err) {
@@ -183,22 +190,25 @@ app.get("/Authenticate", (req, res) => {
   });
 });
 
-app.post("/Register", (req, res) => {
+app.post("/Register", (req, res, next) => {
   var user = req.body;
   bcrypt.hash(user.password, saltRounds, function (err, hash) {
+    if (err) return next(err);
+
     Register({ username: user.username, password: hash });
     res.json({});
   });
 });
 
-app.post("/Login", (req, res) => {
+app.post("/Login", (req, res, next) => {
   var user = req.body;
   r.table("TaskUsers")
     .filter({ username: user.username })
     .getField("password")
     .limit(1)
     .run(openConn, (err, cursor) => {
-      if (err) throw err;
+      if (err) return next(err);
+
       cursor.toArray((err, result) => {
         var hash = result[0];
 
@@ -207,7 +217,7 @@ app.post("/Login", (req, res) => {
         }
 
         bcrypt.compare(user.password, hash, function (err, success) {
-          if (err) throw err;
+          if (err) return next(err);
 
           if (success) {
             var token = jwt.sign(user.username, tokenSecret);
@@ -220,43 +230,55 @@ app.post("/Login", (req, res) => {
     });
 });
 
-app.get("/CheckUsername", (req, res) => {
+app.get("/CheckUsername", (req, res, next) => {
   var username = req.query.username;
 
   r.table("TaskUsers")
     .filter({ username })
     .count()
     .run(openConn, (err, count) => {
+      if (err) return next(err);
       res.json({ usernameFree: count == 0 });
     });
 });
 
-app.post("/api/UpdateOrder", (req, res) => {
+app.post("/api/UpdateOrder", (req, res, next) => {
   r.table("Orders")
     .get(req.body.id)
     .update(req.body)
     .run(openConn, (err, result) => {
-      if (err) throw err;
+      if (err) return next(err);
       res.json(null);
     });
 });
 
-app.post("/api/NewOrder", (req, res) => {
+app.post("/api/NewOrder", (req, res, next) => {
   r.table("Orders")
     .insert(req.body)
     .run(openConn, (err, result) => {
-      if (err) throw err;
+      if (err) return next(err);
       res.json(null);
     });
 });
 
-app.post("/api/DeleteOrder", (req, res) => {
+app.post("/api/DeleteOrder", (req, res, next) => {
   r.table("Orders")
     .get(req.query.id)
     .delete()
     .run(openConn, (err, result) => {
-      if (err) throw err;
+      if (err) return next(err);
     });
+});
+
+//middleware error logging
+app.use((err, req, res, next) => {
+  r.table("Log").insert(err).run(openConn);
+  next(err);
+});
+
+//middleware end point
+app.use((err, req, res, next) => {
+  res.status("500").json({ error: "Error On Server. Try Again" }).end();
 });
 
 const PORT = process.env.PORT || 5000;

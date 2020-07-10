@@ -257,8 +257,8 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
 
+    <script src="/js/errorhandler.js"></script>
     <script src="/js/vue.js"></script>
-
     <script>
       const formatter = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,      
@@ -274,6 +274,10 @@
       socket.on("broadcast", function (data) {
         vm.updateOrder(data);
         vz.updateData(data);
+      });
+
+      socket.on("socketError", function (error) {
+        ShowError(data);
       });
 
       function NewOrderModalShow (){
