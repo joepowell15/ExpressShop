@@ -256,7 +256,6 @@
 
               if (isRegistering) {                  
                 $.getJSON("/CheckUsername",{username}, (data) => {
-                    console.log(data);
                     if(!data.usernameFree)
                     {
                     M.toast({html: 'Username is already taken', classes: "red yellow-text" });
