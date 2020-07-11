@@ -39,13 +39,13 @@
 
   <body>
     <div id="navbar-placeholder"></div>
-    
+
     <div>
       <div
-        class="container z-depth-5"
-        style="background-color: white;border-radius: 15px;"
+        class="container"
+        style="background-color: white; border-radius: 15px;"
       >
-        <h1 class="center-align">Stock Tracker</h1>
+        <h1 id="StockTitle" class="center-align">Stock Tracker</h1>
         <div class="row">
           <div class="col m6 s12 stock-area hoverable">
             <div id="ChartArea_1" class="scale-transition scale-out">
@@ -55,7 +55,11 @@
               ></canvas>
             </div>
 
-            <input id="TickerInput_1" placeholder="Enter Stock Ticker" />
+            <div class="input-field">
+              <input id="TickerInput_1" type="text" maxlength="10" />
+              <label for="TickerInput_1">Enter Stock Ticker</label>
+            </div>
+
             <div class="right-align">
               <a
                 id="HideChartAreaBtn_1"
@@ -80,7 +84,11 @@
               ></canvas>
             </div>
 
-            <input id="TickerInput_2" placeholder="Enter Stock Ticker" />
+            <div class="input-field">
+              <input id="TickerInput_2" type="text" maxlength="10" />
+              <label for="TickerInput_2">Enter Stock Ticker</label>
+            </div>
+
             <div class="right-align">
               <a
                 id="HideChartAreaBtn_2"
@@ -105,7 +113,11 @@
               ></canvas>
             </div>
 
-            <input id="TickerInput_3" placeholder="Enter Stock Ticker" />
+            <div class="input-field">
+              <input id="TickerInput_3" type="text" maxlength="10" />
+              <label for="TickerInput_3">Enter Stock Ticker</label>
+            </div>
+
             <div class="right-align">
               <a
                 id="HideChartAreaBtn_3"
@@ -130,7 +142,11 @@
               ></canvas>
             </div>
 
-            <input id="TickerInput_4" placeholder="Enter Stock Ticker" />
+            <div class="input-field">
+              <input id="TickerInput_4" type="text" maxlength="10" />
+              <label for="TickerInput_4">Enter Stock Ticker</label>
+            </div>
+
             <div class="right-align">
               <a
                 id="HideChartAreaBtn_4"
@@ -159,6 +175,7 @@
     <script src="js/materialize.js"></script>
     <script src="js/site.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.min.js"></script>
 
     <script>
       var data = [];
@@ -171,6 +188,58 @@
       var chart2;
       var chart3;
       var chart4;
+
+      var textWrapper = document.querySelector("#StockTitle");
+      textWrapper.innerHTML = textWrapper.textContent.replace(
+        /\S/g,
+        "<span class='letter'>$&</span>"
+      );
+
+      anime
+        .timeline()
+        .add({
+          targets: "#StockTitle .letter",
+          scale: [4, 1],
+          opacity: [0, 1],
+          translateZ: 0,
+          easing: "easeInQuad",
+          duration: 1000,
+          delay: (el, i) => 250 * i,
+        })
+        .add({
+          targets: ".ml2",
+          opacity: 0,
+          duration: 1000,
+          easing: "easeInQuad",
+          delay: 2000,
+        });
+
+      anime({
+        targets: ".stock-area",
+        translateX: function (el, i, l) {
+          if (i % 2 == 0) {
+            return [++i * 500, 0];
+          } else {
+            return [++i * -500, 0];
+          }
+        },
+        translateY: function (el, i, l) {
+          return [++i * 500, 0];
+        },
+        easing: "spring(1.5, 80, 12, 0)",
+      });
+
+      anime({
+        targets: ".container",
+        boxShadow: [
+          "0 0 50px 30px rgba(0, 0, 0, 0.0)",
+          "0 0 100px 30px rgba(0, 0, 0, .2)",
+          "0 0 50px 30px rgba(0, 0, 0, 0.0)",
+        ],
+        loop: true,
+        easing: "linear",
+        duration: 2500,
+      });
 
       $("#navbar-placeholder").load("navbar.html", () => {
         $("ul #Stock").addClass("active");
@@ -202,6 +271,7 @@
             });
             return;
           }
+
           var symbol = "";
           var companyName = "";
 
@@ -224,6 +294,7 @@
           });
 
           $("#TickerInput_" + id).val("");
+          M.updateTextFields();
         }).fail(function (jqxhr, textStatus, error) {
           M.toast({
             html: jqxhr.responseText,
@@ -257,6 +328,7 @@
             labels: labels,
             datasets: [
               {
+                backgroundColor: ["rgba(255,215,9,.5)"],
                 label: ticker + " " + companyName,
                 data: data,
                 borderWidth: 1,
