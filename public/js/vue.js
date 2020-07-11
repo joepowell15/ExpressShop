@@ -105,10 +105,11 @@ var vm = new Vue({
               ""
             )}`
           );
-          
+
           $("#UnitPrice").val(formatter.format(data["Unit Price"]));
           $("#OrderQuantity").val(data["Order Quantity"]);
           $("#Cateogories").val(data["Product Category"]);
+          this.selectedCategory = data["Product Category"];
           $("#CustomerName").val(data["Customer Name"]);
           $("#OrderId").val(data["Order ID"]);
           $("#ID").val(data.id);
@@ -235,6 +236,21 @@ var charts = new Vue({
   methods: {
     getProfitData: function () {
       $.getJSON("api/GetProfit", (resData) => {
+        resData.map((obj, index, array) => {
+          var initalValue = 0;
+
+          if (this.profitData && this.profitData[index]) {
+            initalValue = this.profitData[index].reduction;
+          }
+
+          anime({
+            targets: obj,
+            reduction: [initalValue, obj.reduction],
+            easing: "linear",
+            round: 1,
+            duration: 1000,
+          });
+        });
         this.profitData = resData;
       });
     },
@@ -261,10 +277,7 @@ var charts = new Vue({
         .getElementById("SalesChart")
         .getContext("2d");
       var chart = new Chart(this.salesChartContext, {
-        // The type of chart we want to create
         type: "bar",
-
-        // The data for our dataset
         data: {
           labels: this.salesData.map((x) => x.group),
           datasets: [
@@ -298,10 +311,8 @@ var charts = new Vue({
         .getElementById("OrdersPerCategoryChart")
         .getContext("2d");
       var chart = new Chart(this.ordersPerCategoryContext, {
-        // The type of chart we want to create
         type: "pie",
         fillOpacity: 0.3,
-        // The data for our dataset
         data: {
           labels: this.ordersPerCategoryData.map((x) => x.group),
           datasets: [
@@ -312,8 +323,6 @@ var charts = new Vue({
             },
           ],
         },
-
-        // Configuration options go here
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -331,10 +340,8 @@ var charts = new Vue({
         .getElementById("OrdersPerDayChart")
         .getContext("2d");
       var chart = new Chart(this.salesChartContext, {
-        // The type of chart we want to create
         type: "line",
         fillOpacity: 0.3,
-        // The data for our dataset
         data: {
           labels: _.orderBy(this.ordersPerDayData, "group", "asc").map((x) =>
             x.group.toLocaleDateString("us")
@@ -348,8 +355,6 @@ var charts = new Vue({
             },
           ],
         },
-
-        // Configuration options go here
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -358,7 +363,6 @@ var charts = new Vue({
               {
                 ticks: {
                   precision: 0,
-                  // Include a dollar sign in the ticks
                   callback: function (value, index, values) {
                     return Math.round(value);
                   },
