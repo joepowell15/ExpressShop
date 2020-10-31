@@ -17,3 +17,8 @@
   bottom: auto%;
   left: auto;
 }
+
+#StockTitle .letter {
+  display: inline-block;
+  line-height: 1em;
+}
