@@ -8,6 +8,8 @@ const bcrypt = require("bcryptjs");
 const helmet = require("helmet");
 const saltRounds = 10;
 var openConn = null;
+var compression = require('compression')
+var minify = require('express-minify');
 const app = express();
 
 //schemas
@@ -36,6 +38,8 @@ if (process.env.NODE_ENV == "prod") {
 var io = require("socket.io")(http);
 
 app.use(helmet());
+app.use(compression());
+app.use(minify());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

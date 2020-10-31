@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="Description" content="Page consisting of a CRUD application that simulates ordering, a dashboard that shows info about the ordering application, and an 'About Me' section">
     <title>Jovaughn's PortFolio</title>
 
     <!-- CSS  -->
@@ -46,7 +47,7 @@
         </div>
       </div>
       <div class="parallax">
-        <img src="images/background1.jpg" alt="Leaves" />
+        <img src="images/background1.jpg" loading="lazy" alt="Leaves" />
       </div>
     </div>
 
@@ -198,7 +199,7 @@
         </div>
       </div>
       <div class="parallax">
-        <img src="images/background2.jpg" alt="Lion" />
+        <img src="images/background2.jpg" loading="lazy" alt="Lion picture" />
       </div>
     </div>
 
@@ -206,7 +207,6 @@
       <div class="section">
         <div class="row">
           <div class="col s12 center">
-            <h3><i class="mdi-content-send brown-text"></i></h3>
             <h4>Profit Per Category</h4>
             <div style="display: flex;justify-content: space-evenly;">
               <div style="margin-right:20px;" class="left" v-for="group in profitData">
@@ -243,7 +243,7 @@
         </div>
       </div>
       <div class="parallax">
-        <img src="images/background3.jpg" alt="Large body of water" />
+        <img src="images/background3.jpg" loading="lazy" alt="Large body of water" />
       </div>
     </div> 
 
@@ -257,7 +257,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="js/materialize.js"></script>
+    <script src="js/materialize.min.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"
       integrity="sha256-OgiHfllOBEOiWQ2OcBsDncRG2k7QBW9Rs1dB7MH2N2s="
