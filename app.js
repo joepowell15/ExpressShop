@@ -22,10 +22,10 @@ const tokenSecret =
 if (process.env.NODE_ENV == "prod") {
   const options = {
     key: fs.readFileSync(
-      "/etc/letsencrypt/live/www.jovaughnpowell.com/privkey.pem"
+      "/etc/letsencrypt/live/jovaughnpowell.com/privkey.pem"
     ),
     cert: fs.readFileSync(
-      "/etc/letsencrypt/live/www.jovaughnpowell.com/fullchain.pem"
+      "/etc/letsencrypt/live/jovaughnpowell.com/fullchain.pem"
     ),
   };
 
