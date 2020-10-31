@@ -284,7 +284,7 @@ var charts = new Vue({
             {
               label: "Sales Per Shipping Mode",
               backgroundColor: charBGColor,
-              data: this.salesData.map((x) => x.reduction),
+              data: this.salesData.map((x) => x.reduction.toFixed(0)),
             },
           ],
         },

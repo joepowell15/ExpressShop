@@ -174,15 +174,18 @@
                 <li v-on:click="currentPage=1" class="waves-effect"><a href="#!"><i class="material-icons">first_page</i></a></li>
                 <li v-on:click="currentPage--" v-if="currentPage!=1" class="waves-effect"><a href="#!"><i class="material-icons large">chevron_left</i></a></li>
                 <li  v-else class="waves-effect disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                <span v-for="page,index in pages">
-                  <li v-bind:class="{ active: page.index==currentPage }" v-on:click="currentPage=++index" class="waves-effect"><a href="#!">{{page.index}}</a></li>
-                </span>
+               
+                  <li class="active" class="waves-effect"><a href="#!">{{currentPage}}</a></li>
+                
                 <li v-on:click="currentPage++" v-if="currentPage!=pages.length" class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
                 <li  v-else class="waves-effect disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
                 <li v-on:click="currentPage=pages.length" class="waves-effect"><a href="#!"><i class="material-icons">last_page</i></a></li>
               </ul>
             </span>
-            </div>        
+            </div>  
+            <div class="center align">
+                {{currentPage}} of {{pages.length}}
+            </div>      
           </div>
         </div>
       </div>
@@ -208,7 +211,7 @@
         <div class="row">
           <div class="col s12 center">
             <h4>Profit Per Category</h4>
-            <div style="display: flex;justify-content: space-evenly;">
+            <div style="display: flex;justify-content: space-evenly;flex-wrap: wrap;">
               <div style="margin-right:20px;" class="left" v-for="group in profitData">
                 <span v-bind:class="{ 'red-text': group.reduction<0 }" style="font-size: 70px;">${{group.reduction.toFixed(2)}} </span>
                 <span v-bind:class="{ 'red-text': group.reduction<0 }" style="font-size: 30px;display: block;">{{group.group}}</span>           
@@ -216,11 +219,11 @@
             </div>
             <hr/>
             <div class="col s12"> 
-              <div class="left col s4" >
+              <div class="left col s12 m4" >
                 <canvas height="400" id="SalesChart"></canvas>
               </div>
 
-              <div class="left col s8" >
+              <div class="left col s12 m8" >
                 <canvas height="400" id="OrdersPerDayChart"></canvas>
               </div>
             </div>

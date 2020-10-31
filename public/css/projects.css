@@ -1,8 +1,9 @@
 html,
-body { 
+body {
   overflow-x: hidden;
-  height: 3200px;
-  min-width: 550px;
+  height: 3200px;  
+  font-size: min(max(1rem, 4vw), 30px);
+  min-width: 315px;
 }
 
 .project-holder {
@@ -19,10 +20,16 @@ body {
 }
 
 .project-holder ul {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
-  font-size: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.project-holder ul > li {
+  width: 350px;
+}
+
+.project-holder-title{
+  font-size: min(max(1rem, 4vw), 45px);
 }
 
 hr {
@@ -49,3 +56,5 @@ hr {
     width: 70%;
   }
 }
+
+
