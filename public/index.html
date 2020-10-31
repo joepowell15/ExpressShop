@@ -40,7 +40,7 @@
         <div class="container">
           <br /><br />
           <h1 class="header center white-text text-lighten-2">
-            Store Front
+            Orders
           </h1>
           <br /><br />         
         </div>
@@ -114,17 +114,17 @@
 
                 <a class="btn dropdown-trigger action-btn" data-target='PageSizeDropDown'><i class="left material-icons">list</i>Page Size</a>
                   <ul id='PageSizeDropDown' class='dropdown-content'> 
-                    <li><a  href="#!" v-on:click="pageSize=10">10</a></li>
-                    <li><a  href="#!" v-on:click="pageSize=30">30</a></li>
-                    <li><a  href="#!" v-on:click="pageSize=60">60</a></li>
+                    <li v-bind:class="{ active: pageSize==10 }"><a  href="#!" v-on:click="pageSize=10">10</a></li>
+                    <li v-bind:class="{ active: pageSize==30 }"><a  href="#!" v-on:click="pageSize=30">30</a></li>
+                    <li v-bind:class="{ active: pageSize==60 }"><a  href="#!" v-on:click="pageSize=60">60</a></li>
                   </ul>
 
                   <a class="btn dropdown-trigger action-btn" data-target='dropdown1'><i class="left material-icons">sort</i>Sort</a>
                     <ul id='dropdown1' class='dropdown-content'>                     
-                      <li><a id="AscendingPrice" v-on:click="sortElements('AscendingPrice')" href="#!"><i class="material-icons">arrow_downward</i>Price Low To High</a></li>
-                      <li><a id="DescendingPrice"  v-on:click="sortElements('DescendingPrice')"><i class="material-icons">arrow_upward</i>Price High To Low</a></li>                    
-                      <li><a id="AToZ" href="#!"  v-on:click="sortElements('AToZ')" ><i class="material-icons">sort_by_alpha</i>A -> Z</a></li>
-                      <li><a id="ZToA" href="#!" v-on:click="sortElements('ZToA')"><i class="material-icons">sort_by_alpha</i>Z -> A</a></li>
+                      <li v-bind:class="{ active: sortId=='AscendingPrice' }"><a id="AscendingPrice" v-on:click="sortElements('AscendingPrice')" href="#!"><i class="material-icons">arrow_downward</i>Price Low To High</a></li>
+                      <li v-bind:class="{ active: sortId=='DescendingPrice' }"><a id="DescendingPrice"  v-on:click="sortElements('DescendingPrice')"><i class="material-icons">arrow_upward</i>Price High To Low</a></li>                    
+                      <li v-bind:class="{ active: sortId=='AToZ' }"><a id="AToZ" href="#!"  v-on:click="sortElements('AToZ')" ><i class="material-icons">sort_by_alpha</i>A -> Z</a></li>
+                      <li v-bind:class="{ active: sortId=='ZToA' }"><a id="ZToA" href="#!" v-on:click="sortElements('ZToA')"><i class="material-icons">sort_by_alpha</i>Z -> A</a></li>
                     </ul>
               </div>
             </div>            
@@ -264,7 +264,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js" integrity="sha512-LfB+BcvR3zBt7ebVskhSWiSbEUiG3p5EcCprkieldsKhBeR6wpnLi0VpWC2GNgVGWP2n/skO8Bx2oKNjUhXCkw==" crossorigin="anonymous"></script>
     <script src="/js/errorhandler.js"></script>
     <script src="/js/vue.js"></script>
     <script src="/js/site.js"></script>
@@ -303,10 +303,13 @@
         $("#CustomerSegment").val(null);
         $("#OrderDate").val(null);
         $("#OrderId").val(null);
+        $("#Cateogories").val("(None)");
+        vm.selectedCategory="(None)";
         $("#OrderQuantity").val(1);
         $("#UnitPrice").val(1.00);
         $("#ID").val(null);
         var instance = M.Modal.getInstance($("#EditOrderModal"));
+        $("#Cateogories").formSelect();
         M.updateTextFields();
         instance.open();
       }
