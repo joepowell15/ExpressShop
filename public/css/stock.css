@@ -1,3 +1,12 @@
+html { 
+  background: url("stocksbg.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
 .icon-block {
   padding: 0 15px;
 }
@@ -14,7 +23,7 @@
 #toast-container {
   top: 1% !important;
   right: auto !important;
-  bottom: auto%;
+  bottom: auto;
   left: auto;
 }
 

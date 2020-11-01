@@ -1,6 +1,15 @@
-body,
-html {
-  overflow-y: hidden;  
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow-y: hidden;
+}
+
+
+body { 
+  background-image: url("testLoginBG.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size:contain;
 }
 
 h5 {
@@ -9,8 +18,9 @@ h5 {
 
 .container {
   max-width: 400px;
-  height: 600px;
   border-radius: 10px;
+  border: 1PX solid lightgray;
+  padding-bottom: 100px;
 }
 
 .form-container {

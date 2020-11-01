@@ -23,7 +23,8 @@ var vm = new Vue({
   },
   methods: {
     getItems: function () {
-      $.getJSON("api/Orders", (resData) => {
+      $.getJSON("api/Orders", (resData) => {        
+        $("#LoadingIndicator").hide();
         this.items = resData;
         this.productCategories = [
           ...new Set(_.sortBy(resData.map((x) => x["Product Category"]))),
