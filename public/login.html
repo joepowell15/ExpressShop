@@ -9,9 +9,10 @@
         <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
+      
     />
     <link
-      href="css/materialize.css"
+      href="css/materialize.min.css"
       type="text/css"
       rel="stylesheet"
       media="screen,projection"
@@ -110,63 +111,33 @@
             $("ul #NavLogin").addClass("active");
             CheckForAuthentication();
             $(".sidenav").sidenav();
-          });
-
-          $(()=>{
-              ShowLogin();
-          });          
-         
-          function ShowLogin() {
-             login= anime({
-                  targets:'#Login',
-                  easing:"linear",
-                  translateY:[-1500,0],
-                  opacity:[0,1],
-                  duration:500,
-              })
-          }
+          });      
 
           function Shake() {
             anime({
                   targets:'.container',
                   translateX:[10,0,20,30,0],
-                  boxShadow:{value:["0 0 20px red","0 0 0px red"],
-                            duration:10000},
                   duration:500,
               })              
           }
           
           $("#CreateAccount").click(()=>{
-              var timer =setInterval(() => {              
-                login.seek(login.duration-=50);
-                if (login.duration<=0) {
-                    clearInterval(timer);
-                    login.duration=500;
-                }
-          }, 10);
-          ShowRegister();
+            ShowRegister();
           });
 
           $("#BackToLogin").click(()=>{
-              var timer =setInterval(() => {              
-                register.seek(register.duration-=50);
-                if (register.duration<=0) {
-                    clearInterval(timer);
-                    register.duration=500;
-                }
-          }, 10);
-          login.play();
+            ShowLogin();
           });
 
-          function ShowRegister() {
-              register= anime({
-                  targets:'#Register',
-                  translateY:[1500,-380],
-                  opacity:[0,1],
-                  duration:500,
-                  easing:"linear",
-              });
-              $("#Register").removeClass("hide");
+
+          function ShowRegister() {          
+            $("#Login").addClass("hide");
+            $("#Register").removeClass("hide");             
+          }
+
+          function ShowLogin(){
+            $("#Login").removeClass("hide");
+            $("#Register").addClass("hide");    
           }
 
           $("#RegisterBtn").click(()=>{
@@ -270,10 +241,6 @@
 
               return true;
           }
-
-          if ('serviceWorker' in navigator) {
-                console.log("test");
-            }
       </script>
     </body>
 </html>

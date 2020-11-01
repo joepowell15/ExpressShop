@@ -1,40 +1,9 @@
-body,html
-{
-   background: unset;
-}
-
 p {
   line-height: 2rem;
 }
 
 .sidenav-trigger {
   color: #26a69a;
-}
-
-.parallax-container {
-  min-height: 380px;
-  line-height: 0;
-  height: auto;
-  color: rgba(255, 255, 255, 0.9);
-}
-.parallax-container .section {
-  width: 100%;
-}
-
-@media only screen and (max-width: 992px) {
-  .parallax-container .section {
-    position: absolute;
-    top: 40%;
-  }
-  #index-banner .section {
-    top: 10%;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  #index-banner .section {
-    top: 0;
-  }
 }
 
 .icon-block {
@@ -73,6 +42,25 @@ footer.page-footer {
   alignment-baseline: middle;
 }
 
-.action-btn{
+.action-btn {
   margin-bottom: 5px;
+}
+
+#Header1{  
+  background: url("headerbg.jpg") no-repeat center center fixed;
+  height: 300px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+#Header2{  
+  background: url("header2bg.jpg") no-repeat center center fixed;
+  height: 300px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
