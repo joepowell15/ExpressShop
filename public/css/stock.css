@@ -1,11 +1,24 @@
-html { 
-  background: url("stocksbg.jpg") no-repeat center center fixed; 
+@media only screen and (max-width: 600px) {
+  #MainContainer{    
+    background-size:65%;
+  }
+}
+
+html {
+  background: url("stockBG.png") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
 
+#MainContainer{
+  background-image: url("circlesLarge.png");
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  background-color:snow;
+  border-radius: 40px;
+}
 
 .icon-block {
   padding: 0 15px;
@@ -15,7 +28,6 @@ html {
 }
 
 .stock-area {
-  border: 1px solid lightgrey;
   height: 450px;
   width: 100%;
 }

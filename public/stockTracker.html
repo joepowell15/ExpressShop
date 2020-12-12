@@ -44,8 +44,8 @@
 
     <div>
       <div
-        class="container"
-        style="background-color: white; border-radius: 15px;"
+        class="container z-depth-5"
+        id="MainContainer"
       >
         <h3 id="StockTitle" class="center-align">Stock Tracker</h1>
         <div class="row">
@@ -214,19 +214,7 @@
           duration: 1000,
           easing: "easeInQuad",
           delay: 2000,
-        });    
-
-      anime({
-        targets: ".container",
-        boxShadow: [
-          "0 0 50px 30px rgba(0, 0, 0, 0.0)",
-          "0 0 100px 30px rgba(0, 0, 0, .2)",
-          "0 0 50px 30px rgba(0, 0, 0, 0.0)",
-        ],
-        loop: true,
-        easing: "linear",
-        duration: 2500,
-      });
+        });          
 
       $("#navbar-placeholder").load("navbar.html", () => {
         $("ul #Stock").addClass("active");
