@@ -1,3 +1,13 @@
+html {
+  height: 100%;
+  width: 100%;
+  background: url(orderBG.png) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 p {
   line-height: 2rem;
 }
@@ -46,21 +56,13 @@ footer.page-footer {
   margin-bottom: 5px;
 }
 
-#Header1{  
-  background: url("headerbg.jpg") no-repeat center center fixed;
-  height: 300px;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+#app {
+  margin-bottom: 5px;
+  background-color: whitesmoke;
+  border-radius: 20px;
 }
 
-
-#Header2{  
-  background: url("header2bg.jpg") no-repeat center center fixed;
-  height: 300px;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+#chartApp {
+  background-color: snow;
+  border-radius: 20px;
 }

@@ -1,15 +1,15 @@
 body, html {
   height: 100%;
   margin: 0;
-  overflow-y: hidden;
 }
 
 
 body { 
-  background-image: url("testLoginBG.jpg");
+  background-image: url("loginBG.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size:contain;
+  background-size:cover;
+  background-attachment: fixed;
 }
 
 h5 {
