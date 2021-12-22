@@ -40,6 +40,12 @@ var io = require("socket.io")(http);
 app.use(helmet());
 app.use(compression());
 app.use(minify());
+
+app.use("*.svg",function (req, res, next) {  
+  res.contentType("image/svg+xml");
+  next();
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -76,6 +82,10 @@ var connection = r.connect(
 //     });
 //   });
 // },5000);
+
+app.get('/index', function(req, res) {
+ console.log(req.url);
+});
 
 function BeginRealTimeStream() {
   r.table("Orders")
