@@ -5,7 +5,7 @@ body {
 }
 
 .project-holder {
-  background: rgba(207, 207, 207, 0.4);
+  background: white;
   padding: 10px;
   border-radius: 10px;
   display: flex;

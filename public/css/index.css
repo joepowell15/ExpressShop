@@ -1,7 +1,7 @@
 html {
   height: 100%;
   width: 100%;
-  background: url(orderBG.png) no-repeat center center fixed;
+  background: url(siteBg.svg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -58,7 +58,7 @@ footer.page-footer {
 
 #app {
   margin-bottom: 5px;
-  background-color: whitesmoke;
+  background-color: white;
   border-radius: 20px;
 }
 
