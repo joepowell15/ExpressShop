@@ -1,8 +1,16 @@
+html {
+  width: 100%;
+  background: url(siteBg.svg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 html ,
 body {
   height: 100%;
   margin: 0;
-
 }
 
 nav {
@@ -27,4 +35,9 @@ nav {
 
 .sidenav-overlay {
   z-index: 0;
+}
+
+.logo-text{
+  font-family: 'Courier New', Courier, monospace;
+  margin-left:5px;
 }
