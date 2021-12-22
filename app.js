@@ -83,10 +83,6 @@ var connection = r.connect(
 //   });
 // },5000);
 
-app.get('/index', function(req, res) {
- console.log(req.url);
-});
-
 function BeginRealTimeStream() {
   r.table("Orders")
     .changes()
