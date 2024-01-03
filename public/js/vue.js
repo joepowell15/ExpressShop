@@ -23,7 +23,7 @@ var vm = new Vue({
   },
   methods: {
     getItems: function () {
-      $.getJSON("api/Orders", (resData) => {        
+      $.getJSON("api/Orders", (resData) => {
         $("#LoadingIndicator").hide();
         this.items = resData;
         this.productCategories = [
@@ -143,7 +143,7 @@ var vm = new Vue({
         type: "POST",
         url: "api/DeleteOrder?" + $.param({ id }),
         contentType: "application/json",
-        success: (data) => {},
+        success: (data) => { },
         error: (jqXHR, textStatus, errorThrown) => {
           M.toast({ html: jqXHR.responseText, classes: "red yellow-text" });
         },
@@ -382,7 +382,7 @@ var charts = new Vue({
     },
   },
   watch: {
-    salesData: () => {},
+    salesData: () => { },
   },
   created() {
     this.getProfitData();
