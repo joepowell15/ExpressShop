@@ -1,3 +1,4 @@
+const config = require("./config");
 const express = require("express");
 const path = require("path");
 const r = require("rethinkdb");
@@ -19,13 +20,13 @@ var orderSchema = require("./public/js/schemas/orderSchema");
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
 
-if (process.env.NODE_ENV == "prod") {
+if (config.app.env.NODE_ENV == "prod") {
   const options = {
     key: fs.readFileSync(
-      "/etc/letsencrypt/live/jovaughnpowell.com/privkey.pem"
+      "/etc/letsencrypt/live/www.jovaughnpowell.com/privkey.pem"
     ),
     cert: fs.readFileSync(
-      "/etc/letsencrypt/live/jovaughnpowell.com/fullchain.pem"
+      "/etc/letsencrypt/live/www.jovaughnpowell.com/fullchain.pem"
     ),
   };
 
@@ -44,13 +45,11 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var connection = r.connect(
+r.connect(
   {
-    host: "69.55.55.31",
-    port: 28015,
-    db: "StoreDB",
-    password: "Wishbone15",
-    user: "admin",
+    host: config.app.env.RETHINKDB_HOST,
+    port: config.app.env.RETHINKDB_PORT,
+    db: config.app.env.RETHINKDB_DEFAULT_DB,
   },
   (err, conn) => {
     if (err) throw err;
@@ -116,7 +115,7 @@ app.get("/api/GetProfit", (req, res, next) => {
       cursor.toArray((err, result) => {
         if (err) return next(err);
 
-        if (result[0].group == "") {
+        if (result[0]?.group == "") {
           result[0].group = "(No Group)";
         }
         res.json(result);
@@ -136,7 +135,7 @@ app.get("/api/GetSales", (req, res, next) => {
       cursor.toArray((err, result) => {
         if (err) return next(err);
 
-        if (result[0].group == "") {
+        if (result[0]?.group == "") {
           result[0].group = "(No Group)";
         }
         res.json(result);
@@ -156,7 +155,7 @@ app.get("/api/CountPerProductCategory", (req, res, next) => {
       cursor.toArray((err, result) => {
         if (err) return next(err);
 
-        if (result[0].group == "") {
+        if (result[0]?.group == "") {
           result[0].group = "(No Group)";
         }
         res.json(result);
@@ -313,9 +312,9 @@ app.use((err, req, res, next) => {
   res.status("500").json({ error: "Error On Server. Try Again" }).end();
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = config.app.env.SOCKET_POLLING_PORT || 5000;
 
-if (process.env.NODE_ENV != "prod") {
+if (config.app.env.NODE_ENV  != "prod") {
   app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 }
 
