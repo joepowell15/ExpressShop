@@ -13,8 +13,9 @@ function CheckForAuthentication() {
       $.getJSON("/Authenticate", { token }, (data) => {
         if (data.authenticated) {
           ShowProfile(true);
-          $("#TokenUsername").text(JSON.parse(cookie).username);
-          $(".dropdown-trigger").dropdown({ coverTrigger: false });
+          document.querySelector("#TokenUsername").textContent = JSON.parse(cookie).username;
+          var elems = document.querySelectorAll('.dropdown-trigger');
+          M.Dropdown.init(elems, { coverTrigger: false });
         } else {
           ShowProfile(false);
         }

@@ -1,246 +1,223 @@
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Login</title>
-        <meta name="Description" content="Basic login page that uses a json cookie to authenticate with the server">
-        <meta name="viewport" content="width=device-width, initial-scale=1">        
-        <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-      
-    />
-    <link
-      href="css/materialize.min.css"
-      type="text/css"
-      rel="stylesheet"
-      media="screen,projection"
-    />
-    <link
-      href="css/login.css"
-      type="text/css"
-      rel="stylesheet"
-      media="screen,projection"
-    />
 
-    <link
-    href="css/site.css"
-    type="text/css"
-    rel="stylesheet"
-    media="screen,projection"
-  />
-    </head>
-    <body>
-        <div id="navbar-placeholder" style="margin-bottom: 10px;"></div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+    <meta name="Description" content="Basic login page that uses a json cookie to authenticate with the server">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="css/login.css" type="text/css" rel="stylesheet" media="screen,projection" />
 
-        <div style="height:100%;" class="valign-wrapper">
-            <div class="container white z-depth-2" >          
-                <div class="col s12" id="Login">
-                    <form class="col s12">
-                        <div class="form-container">
-                            <h3 class="teal-text">Login</h3>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="Username" type="text" class="validate"  maxlength="30">
-                                    <label for="Username">Username</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="Password" type="password" class="validate"  maxlength="30">
-                                    <label for="Password">Password</label>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="left align">
-                                <button class="btn waves-effect waves-light blue" id="CreateAccount" type="button">Create Account</button>
-                            </div>
-                            <div class="right align">
-                                <button class="btn waves-effect waves-light green" type="button" id="LoginBtn">Login</button>
+    <link href="css/site.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <div id="navbar-placeholder" style="margin-bottom: 10px;"></div>
+
+    <div style="height:100%;" class="valign-wrapper">
+        <div class="container white">
+            <div class="col s12" id="Login">
+                <form class="col s12">
+                    <div class="form-container">
+                        <h3 class="teal-text">Login</h3>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="Username" type="text" class="validate" maxlength="15">
+                                <label for="Username">Username</label>
                             </div>
                         </div>
-                    </form>
-                </div>
-
-                <div class="col s12 hide" id="Register">
-                    <form class="col s12">
-                        <div class="form-container">
-                            <h3 class="teal-text">Register</h3>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="RegUsername" type="text" class="validate" maxlength="30">
-                                    <label for="RegUsername">Username</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input id="RegPassword" type="password" class="validate" maxlength="30">
-                                    <label for="RegPassword">Password</label>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="left align">
-                                <button class="btn waves-effect waves-light blue" id="BackToLogin" type="button">Back To Login</button>
-                            </div>
-                            <div class="right align">
-                                <button class="btn waves-effect waves-light green" type="button" id="RegisterBtn" >Register</button>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="Password" type="password" class="validate" maxlength="30">
+                                <label for="Password">Password</label>
                             </div>
                         </div>
-                    </form>
-                </div>
-                </div>
-            </div>       
+                        <br>
+                        <div class="left align">
+                            <button class="btn waves-effect waves-light blue" id="CreateAccount" type="button">Create
+                                Account</button>
+                        </div>
+                        <div class="right align">
+                            <button class="btn waves-effect waves-light green" type="button"
+                                id="LoginBtn">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col s12 hide" id="Register">
+                <form class="col s12">
+                    <div class="form-container">
+                        <h3 class="teal-text">Register</h3>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="RegUsername" type="text" class="validate" maxlength="15">
+                                <label for="RegUsername">Username</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="RegPassword" type="password"  autocomplete="new-password" class="validate" maxlength="30">
+                                <label for="RegPassword">Password</label>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="left align">
+                            <button class="btn waves-effect waves-light blue" id="BackToLogin" type="button">Back To
+                                Login</button>
+                        </div>
+                        <div class="right align">
+                            <button class="btn waves-effect waves-light green" type="button"
+                                id="RegisterBtn">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        
-        <script
-        src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-        crossorigin="anonymous"
-      ></script>
-      <script src="js/materialize.min.js"></script>      
-      <script src="js/site.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js" integrity="sha512-LfB+BcvR3zBt7ebVskhSWiSbEUiG3p5EcCprkieldsKhBeR6wpnLi0VpWC2GNgVGWP2n/skO8Bx2oKNjUhXCkw==" crossorigin="anonymous"></script>
-      <script src="/js/errorhandler.js"></script>
-      
-      <script>
-          var login=null;
-          var reister=null;
+    </div>
+    </div>
 
-          $("#navbar-placeholder").load("navbar.html",()=>{        
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/site.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"
+        integrity="sha512-LfB+BcvR3zBt7ebVskhSWiSbEUiG3p5EcCprkieldsKhBeR6wpnLi0VpWC2GNgVGWP2n/skO8Bx2oKNjUhXCkw=="
+        crossorigin="anonymous"></script>
+    <script src="/js/errorhandler.js"></script>
+
+    <script>
+        var login = null;
+        var reister = null;
+
+        $("#navbar-placeholder").load("navbar.html", () => {
             $("ul #NavLogin").addClass("active");
             CheckForAuthentication();
             $(".sidenav").sidenav();
-          });      
+        });
 
-          function Shake() {
+        function Shake() {
             anime({
-                  targets:'.container',
-                  translateX:[10,0,20,30,0],
-                  duration:500,
-              })              
-          }
-          
-          $("#CreateAccount").click(()=>{
+                targets: '.container',
+                translateX: [10, 0, 20, 30, 0],
+                duration: 500,
+            })
+        }
+
+        $("#CreateAccount").click(() => {
             ShowRegister();
-          });
+        });
 
-          $("#BackToLogin").click(()=>{
+        $("#BackToLogin").click(() => {
             ShowLogin();
-          });
+        });
 
 
-          function ShowRegister() {          
+        function ShowRegister() {
             $("#Login").addClass("hide");
-            $("#Register").removeClass("hide");             
-          }
+            $("#Register").removeClass("hide");
 
-          function ShowLogin(){
+            document.querySelector("#RegUsername").value="";
+            document.querySelector("#RegPassword").value="";
+        }
+
+        function ShowLogin() {
             $("#Login").removeClass("hide");
-            $("#Register").addClass("hide");    
-          }
+            $("#Register").addClass("hide");
 
-          $("#RegisterBtn").click(()=>{
-              var username=$("#RegUsername").val();
-              var password=$("#RegPassword").val();
+            document.querySelector("#Username").value="";
+            document.querySelector("#Password").value="";
+        }
 
-              if ( ValidateUserName(username,true) &&  ValidatePassword(password,true)) {
+        $("#RegisterBtn").click(() => {
+            var username = $("#RegUsername").val();
+            var password = $("#RegPassword").val();
+
+            if (ValidateUserName(username, true) && ValidatePassword(password, true)) {
                 $.ajax({
                     type: "POST",
                     url: "/Register",
-                    data: JSON.stringify({username,password}),
+                    data: JSON.stringify({ username, password }),
                     contentType: "application/json",
                     success: () => {
-                        $.ajax({
-                            type: "POST",
-                            url: "/Login",
-                            data: JSON.stringify({username,password}),
-                            contentType: "application/json",
-                            success: (token) => {
-                                if (token) {
-                                    document.cookie = "authToken="+JSON.stringify(token)+";";
-                                } else {
-                                    Shake();
-                                    M.toast({ html: "Invalid Password or Username", classes: "red yellow-text" });
-                                }                        
-                            },
-                            error: (jqXHR, textStatus, errorThrown) => {
-                                M.toast({ html: jqXHR.responseText, classes: "red yellow-text" });
-                            },
-                        });
+                        M.toast({ html: "Registration Successful", classes: "green white-text" });
+                        ShowLogin();
                     },
                     error: (jqXHR, textStatus, errorThrown) => {
                         M.toast({ html: jqXHR.responseText, classes: "red yellow-text" });
                     },
                 });
-              }
-          })
+            }
+        })
 
-          $("#LoginBtn").click(()=>{
-              var username=$("#Username").val();
-              var password=$("#Password").val();
+        $("#LoginBtn").click(() => {
+            var username = $("#Username").val();
+            var password = $("#Password").val();
 
-              if ( ValidateUserName(username,false)) {
+            if (ValidateUserName(username, false)) {
                 $.ajax({
                     type: "POST",
                     url: "/Login",
-                    data: JSON.stringify({username,password}),
+                    data: JSON.stringify({ username, password }),
                     contentType: "application/json",
                     success: (token) => {
                         if (token) {
-                            document.cookie = "authToken="+JSON.stringify(token)+";";
-                            window.location.href="index.html";
+                            document.cookie = "authToken=" + JSON.stringify(token) + ";";
+                            window.location.href = "index.html";
                         } else {
                             Shake();
                             M.toast({ html: "Invalid Password or Username", classes: "red yellow-text" });
-                        }                        
+                        }
                     },
                     error: (jqXHR, textStatus, errorThrown) => {
                         M.toast({ html: jqXHR.responseText, classes: "red yellow-text" });
                     },
                 });
-              }
-          })
+            }
+        })
 
-          function ValidatePassword(password,isRegistering) {
-            if (password.length<=5) {
-                M.toast({html: 'Password must be at least 6 Characters', classes: "red yellow-text" });
+        function ValidatePassword(password, isRegistering) {
+            if (password.length <= 5) {
+                M.toast({ html: 'Password must be at least 6 Characters', classes: "red yellow-text" });
                 Shake();
                 return false;
-              }
+            }
 
-              if (isRegistering) {
-                var isMatch=password.match(/^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)[0-9a-zA-Z]*$/);
+            if (isRegistering) {
+                var isMatch = password.match(/^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+)[0-9a-zA-Z]*$/);
                 if (!isMatch) {
-                    M.toast({html: 'Password must contain at least one number', classes: "red yellow-text" });
+                    M.toast({ html: 'Password must contain at least one number', classes: "red yellow-text" });
                     Shake();
                     return false;
                 }
-              }            
+            }
 
-              return true;
-          }
+            return true;
+        }
 
-          function ValidateUserName(username,isRegistering) {
-              if (username.length<=5) {
-                M.toast({html: 'Username must be at least 6 Characters', classes: "red yellow-text" });
+        function ValidateUserName(username, isRegistering) {
+            if (username.length <= 5) {
+                M.toast({ html: 'Username must be at least 6 Characters', classes: "red yellow-text" });
                 Shake();
                 return false;
-              }
+            }
 
-              if (isRegistering) {                  
-                $.getJSON("/CheckUsername",{username}, (data) => {
-                    if(!data.usernameFree)
-                    {
-                    M.toast({html: 'Username is already taken', classes: "red yellow-text" });
-                    Shake();
-                    return false;
+            if (isRegistering) {
+                $.getJSON("/CheckUsername", { username }, (data) => {
+                    if (!data.usernameFree) {
+                        M.toast({ html: 'Username is already taken', classes: "red yellow-text" });
+                        Shake();
+                        return false;
                     }
                 });
-              }
+            }
 
-              return true;
-          }
-      </script>
-    </body>
+            return true;
+        }
+    </script>
+</body>
+
 </html>
