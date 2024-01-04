@@ -46,4 +46,4 @@ jobs:
           git pull origin master
           git status
           npm install --only=prod
-          pm2 restart app.js --watch
+          pm2 restart app.config.js --watch
