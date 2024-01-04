@@ -30,10 +30,10 @@ function CheckForAuthentication() {
 
 function ShowProfile(show) {
   if (show) {
-    $("#NavLogin").addClass("hide");
-    $("#Profile").removeClass("hide");
+    document.querySelector("#NavLogin").classList.add("hide");
+    document.querySelector("#Profile").classList.remove("hide");
   } else {
-    $("#NavLogin").removeClass("hide");
-    $("#Profile").addClass("hide");
+    document.querySelector("#NavLogin").classList.remove("hide");
+    document.querySelector("#Profile").classList.add("hide");
   }
 }
