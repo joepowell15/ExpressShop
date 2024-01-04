@@ -1,7 +1,8 @@
 module.exports = {
-  apps : {
+  app : {
     name   : "Portfolio",
     script : "./app.js",
+    "watch" : true,
     env_production: {
         NODE_ENV: "prod",
         SOCKET_POLLING_PORT : 5000,
