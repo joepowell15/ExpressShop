@@ -7,7 +7,7 @@ module.exports = {
         NODE_ENV: "prod",
         SOCKET_POLLING_PORT : 5000,
         RETHINKDB_HOST: "",
-        RETHINKDB_PORT: null,
+        RETHINKDB_PORT: "",
         RETHINKDB_DEFAULT_DB: "StoreDB",
     },
     env_development: {
