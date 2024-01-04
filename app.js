@@ -1,4 +1,3 @@
-const config = require("./config");
 const express = require("express");
 const path = require("path");
 const r = require("rethinkdb");
@@ -20,7 +19,7 @@ var orderSchema = require("./public/js/schemas/orderSchema");
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
 
-if (config.app.env.NODE_ENV == "prod") {
+if (process.env.NODE_ENV == "prod") {
   const options = {
     key: fs.readFileSync(
       "/etc/letsencrypt/live/www.jovaughnpowell.com/privkey.pem"
@@ -47,9 +46,9 @@ app.use(express.urlencoded({ extended: true }));
 
 r.connect(
   {
-    host: config.app.env.RETHINKDB_HOST,
-    port: config.app.env.RETHINKDB_PORT,
-    db: config.app.env.RETHINKDB_DEFAULT_DB,
+    host: process.env.RETHINKDB_HOST,
+    port: process.env.RETHINKDB_PORT,
+    db: process.env.RETHINKDB_DEFAULT_DB,
   },
   (err, conn) => {
     if (err) throw err;
@@ -312,9 +311,9 @@ app.use((err, req, res, next) => {
   res.status("500").json({ error: "Error On Server. Try Again" }).end();
 });
 
-const PORT = config.app.env.SOCKET_POLLING_PORT || 5000;
+const PORT = process.env.SOCKET_POLLING_PORT || 5000;
 
-if (config.app.env.NODE_ENV  != "prod") {
+if (process.env.NODE_ENV  != "prod") {
   app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 }
 
