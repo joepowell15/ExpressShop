@@ -13,8 +13,9 @@ function CheckForAuthentication() {
       $.getJSON("/Authenticate", { token }, (data) => {
         if (data.authenticated) {
           ShowProfile(true);
-          $("#TokenUsername").text(JSON.parse(cookie).username);
-          $(".dropdown-trigger").dropdown({ coverTrigger: false });
+          document.querySelector("#TokenUsername").textContent (JSON.parse(cookie).username);
+          var elems = document.querySelectorAll('.dropdown-trigger');
+          M.Dropdown.init(elems, { coverTrigger: false });
         } else {
           ShowProfile(false);
         }
@@ -29,10 +30,10 @@ function CheckForAuthentication() {
 
 function ShowProfile(show) {
   if (show) {
-    $("#NavLogin").addClass("hide");
-    $("#Profile").removeClass("hide");
+    document.querySelector("#NavLogin").classList.add("hide");
+    document.querySelector("#Profile").classList.remove("hide");
   } else {
-    $("#NavLogin").removeClass("hide");
-    $("#Profile").addClass("hide");
+    document.querySelector("#NavLogin").classList.remove("hide");
+    document.querySelector("#Profile").classList.add("hide");
   }
 }

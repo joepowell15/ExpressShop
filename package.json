@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=prod&&set PORT=443&&node app",
-    "dev": "set NODE_ENV=dev&& nodemon app.js"
+    "dev": "set NODE_ENV=dev&&set SOCKET_POLLING_PORT=5000 && set RETHINKDB_HOST=146.190.40.202&&set RETHINKDB_PORT=28015 && set RETHINKDB_DEFAULT_DB=StoreDB&& nodemon app.js"
   },
   "keywords": [],
   "author": "",
