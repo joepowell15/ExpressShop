@@ -1,8 +1,8 @@
 module.exports = {
-  app : {
-    name   : "Portfolio",
+  apps : [{
+    name : "Portfolio",
     script : "./app.js",
-    "watch" : true,
+    watch : true,
     env_production: {
         NODE_ENV: "prod",
         SOCKET_POLLING_PORT : 5000,
@@ -17,5 +17,5 @@ module.exports = {
         RETHINKDB_PORT: 28015,
         RETHINKDB_DEFAULT_DB: "StoreDB",
     }
-  }
+  }]
 }
