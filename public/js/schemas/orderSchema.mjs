@@ -1,4 +1,4 @@
-const Joi = require("@hapi/joi");
+import Joi from "@hapi/joi";
 
 const orderSchema = Joi.object({
   "Customer Name": Joi.string().min(3).max(50).required(),
@@ -7,4 +7,4 @@ const orderSchema = Joi.object({
   "Product Category": Joi.string().min(1).max(100).required(),
 }).unknown();
 
-module.exports = orderSchema;
+export default orderSchema;

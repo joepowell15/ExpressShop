@@ -1,20 +1,26 @@
-const express = require("express");
-const path = require("path");
-const r = require("rethinkdb");
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
-const helmet = require("helmet");
-const saltRounds = 10;
+import express from "express";
+import path from "path";
+import r from "rethinkdb";
+import jwt from "jsonwebtoken";
+import fs from "fs";
+import bcrypt from "bcryptjs";
+import helmet from "helmet";
+var saltRounds = 10;
 var openConn = null;
-var compression = require('compression')
-var minify = require('express-minify');
+import https from "https";
+import http from "http";
+import compression from 'compression';
+import minify from'express-minify';;
 const app = express();
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 //schemas
-var loginSchema = require("./public/js/schemas/loginSchema");
-var orderSchema = require("./public/js/schemas/orderSchema");
+ import loginSchema from"./public/js/schemas/loginSchema.mjs";
+ import orderSchema from "./public/js/schemas/orderSchema.mjs";
 
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
@@ -29,13 +35,13 @@ if (process.env.NODE_ENV == "prod") {
     ),
   };
 
-  var http = require("https").createServer(options, app).listen(443);
+  https.createServer(options, app).listen(443);
 } else {
-  var http = require("http").Server(app);
-  http.listen(3000);
+  var httpServer = http.Server(app);
+  httpServer.listen(3000);
 }
 
-var io = require("socket.io")(http);
+import io from "socket.io";
 
 app.use(helmet());
 app.use(compression());
@@ -44,19 +50,19 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-r.connect(
-  {
-    host: process.env.RETHINKDB_HOST,
-    port: process.env.RETHINKDB_PORT,
-    db: process.env.RETHINKDB_DEFAULT_DB,
-  },
-  (err, conn) => {
-    if (err) throw err;
-    console.log("db connected");
-    openConn = conn;
-    BeginRealTimeStream();
-  }
-);
+// r.connect(
+//   {
+//     host: process.env.RETHINKDB_HOST,
+//     port: process.env.RETHINKDB_PORT,
+//     db: process.env.RETHINKDB_DEFAULT_DB,
+//   },
+//   (err, conn) => {
+//     if (err) throw err;
+//     console.log("db connected");
+//     openConn = conn;
+//     BeginRealTimeStream();
+//   }
+// );
 
 // setInterval(() => {
 //   var allOrders = [];

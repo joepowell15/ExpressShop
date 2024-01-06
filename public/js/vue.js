@@ -219,7 +219,7 @@ var vm = new Vue({
     },
   },
   mounted() {
-    this.getItems();
+    // this.getItems();
   },
 });
 
@@ -385,10 +385,10 @@ var charts = new Vue({
     salesData: () => { },
   },
   created() {
-    this.getProfitData();
-    this.getSalesData();
-    this.getOrdersPerDayData();
-    this.getOrdersPerCategoryData();
+    // this.getProfitData();
+    // this.getSalesData();
+    // this.getOrdersPerDayData();
+    // this.getOrdersPerCategoryData();
   },
   computed: {
     barHeight() {
