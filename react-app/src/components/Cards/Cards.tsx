@@ -1,11 +1,35 @@
-import { useState, useEffect, React } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../Modal/Modal';
 import Card from '../Card/Card';
 import M from 'materialize-css';
 
+export interface selectedUiItem {
+   id?: string;
+   itemName?: string
+   quantity?: number;
+   unitPrice?: number;
+   category?: string;
+}
+
+interface uiItem {
+   id: string;
+   itemName: string
+   quantity: number;
+   unitPrice: number;
+   category: string;
+}
+
+interface dbItem {
+   id: string;
+   "Customer Name": string
+   "Order Quantity": number;
+   "Unit Price": number;
+   "Product Category": string;
+}
+
 function Cards() {
-   const [items, setItems] = useState([]);
-   const [selectedItem, setSelectedItem] = useState({});
+   const [items, setItems] = useState<uiItem[]>([]);
+   const [selectedItem, setSelectedItem] = useState<selectedUiItem>();
    const [page, setPage] = useState(1);
    const [showModal, setShowModal] = useState(false);
 
@@ -15,9 +39,9 @@ function Cards() {
          .then(function (response) {
             return response.json();
          })
-         .then(function (dbItems) {
+         .then(function (dbItems: dbItem[]) {
             if (!ignore) {
-               setItems(dbItems.map((dbItem) => {
+               setItems(dbItems.map((dbItem: dbItem) => {
                   return {
                      id: dbItem.id,
                      itemName: dbItem["Customer Name"],
@@ -44,13 +68,13 @@ function Cards() {
       setPage(page + 1);
    }
 
-   function setEditModalValues(id) {
+   function setEditModalValues(id: string) {
       console.log(id);
       setSelectedItem(items.filter(x => x.id == id)[0]);
       setShowModal(true);
    }
 
-   function handleRemove(id) {
+   function handleRemove(id: string) {
       fetch(`api/DeleteOrder?id=${id}`, { method: "DELETE" })
          .then(function (response) {
             return response.json();
@@ -71,7 +95,7 @@ function Cards() {
    return <div className='container'>
       {showModal && <Modal titleText="Edit" setShowModal={setShowModal} {...selectedItem} />}
       {items.map((item) => (
-         <Card id={item.id} key={item.id} handleRemove={handleRemove} setEditModalValues={setEditModalValues}  {...item} />))};
+         <Card key={item.id} handleRemove={handleRemove} setEditModalValues={setEditModalValues}  {...item} />))};
 
    </div>
 }

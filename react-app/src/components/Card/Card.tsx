@@ -1,7 +1,17 @@
 import React from 'react';
 import CardIcon from '../CardIcon/CardIcon';
 
-function Card({ handleRemove, setEditModalValues, itemName, quantity, unitPrice, category, id }) {
+interface CardProps {
+   handleRemove: (id: string) => void;
+   setEditModalValues: (id: string) => void;
+   itemName: string;
+   quantity: number;
+   unitPrice: number;
+   category: string;
+   id: string;
+}
+
+function Card({ handleRemove, setEditModalValues, itemName, quantity, unitPrice, category, id }: CardProps) {
    return <div className='list-complete-item row'>
       <div style={{ padding: '10px', width: '300px' }} className="col grey lighten-4 s12 m12">
          <div className="center-align">

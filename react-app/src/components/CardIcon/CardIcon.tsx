@@ -1,6 +1,10 @@
 import React from 'react';
 
-function CardIcon({ category }) {
+interface CardIconProps {
+   category: string;
+}
+
+function CardIcon({ category }: CardIconProps): React.JSX.Element {
    switch (category) {
       case "(None)":
          return <i title="(None)" className="large material-icons">warning</i>;
@@ -11,7 +15,7 @@ function CardIcon({ category }) {
       case "Technology":
          return <i title="Technology" className="large material-icons">computer</i>;
       default:
-         return "";
+         return <></>;
    }
 }
 

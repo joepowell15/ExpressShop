@@ -1,7 +1,17 @@
-import { React, useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import M from 'materialize-css';
 
-function Modal({ setShowModal, titleText, itemName, quantity, unitPrice, category }) {
+interface ModalProps {
+   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+   titleText?: string;
+   itemName?: string;
+   quantity?: number;
+   unitPrice?: number;
+   category?: string;
+}
+
+function Modal({ setShowModal, titleText, itemName, quantity, unitPrice, category }: ModalProps) {
 
    useEffect(() => {
       var elems = document.querySelectorAll('.modal');
@@ -9,7 +19,7 @@ function Modal({ setShowModal, titleText, itemName, quantity, unitPrice, categor
       instances[0].open();
 
       var elems = document.querySelectorAll('#Categories');
-      var instances = M.FormSelect.init(elems, {});
+      M.FormSelect.init(elems, {});
    }, []);
 
    return <div id="EditOrderModal" className="modal">
@@ -19,21 +29,21 @@ function Modal({ setShowModal, titleText, itemName, quantity, unitPrice, categor
             <div className="row">
                <div className="row">
                   <div className="input-field col s12 m6">
-                     <input id="Customer Name" type="text" maxLength="50" value={itemName} />
-                     <label className='active' htmlFor={itemName}>Item Name</label>
+                     <input id="Customer Name" type="text" maxLength={50} value={itemName} />
+                     <label className='active' htmlFor="Customer Name">Item Name</label>
                      <span className="helper-text" data-error="Required" data-success=""></span>
                   </div>
 
                   <div className="input-field col s12 m6">
                      <input id="Order Quantity" type="number" min="1" max="10000" value={quantity} />
-                     <label className='active' htmlFor={quantity}>Quantity</label>
+                     <label className='active' htmlFor="Order Quantity">Quantity</label>
                      <span className="helper-text" data-error="Required" data-success=""></span>
                   </div>
 
                   <div className="input-field col s12 m6">
                      <i className="material-icons tiny prefix">attach_money</i>
-                     <input id="Unit Price" type="number"  value={unitPrice} />
-                     <label className='active' htmlFor={unitPrice}>Price</label>
+                     <input id="Unit Price" type="number" value={unitPrice} />
+                     <label className='active' htmlFor="Unit Price">Price</label>
                   </div>
 
                   <div className="input-field col s12 m6">
@@ -43,7 +53,7 @@ function Modal({ setShowModal, titleText, itemName, quantity, unitPrice, categor
                         <option value="Office Supplies">Office Supplies</option>
                         <option value="Technology">Technology</option>
                      </select>
-                     <label htmlFor={category}>Category</label>
+                     <label htmlFor="Product Category">Category</label>
                   </div>
                </div>
                <input id="OrderId" type="hidden" />

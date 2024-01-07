@@ -15,6 +15,10 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "chart.js": "^2.9.3",
@@ -29,9 +33,11 @@
     "mysql": "^2.18.1",
     "rellax": "^1.12.1",
     "rethinkdb": "^2.4.2",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@types/materialize-css": "^1.0.14",
     "nodemon": "^2.0.4"
   }
 }

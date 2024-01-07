@@ -1,6 +1,10 @@
 import React from 'react';
 
-function NavBar() {
+function logoff(): void {
+
+}
+
+function NavBar(): React.JSX.Element {
   return <div>
     <div className="navbar-fixed" style={{ marginBottom: '10px' }}>
       <nav>
@@ -53,7 +57,7 @@ function NavBar() {
     </div>
 
     <ul id="ProfileDropdown" className="dropdown-content">
-      <li><a href="#!" onclick="Logoff()">Logoff</a></li>
+      <li><a href="#!" onClick={logoff}>Logoff</a></li>
     </ul>
   </div>
 }
