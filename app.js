@@ -10,7 +10,8 @@ var openConn = null;
 import https from "https";
 import http from "http";
 import compression from 'compression';
-import minify from'express-minify';;
+import minify from 'express-minify';
+import bodyParser  from 'body-parser';
 const app = express();
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -46,23 +47,27 @@ import io from "socket.io";
 app.use(helmet());
 app.use(compression());
 app.use(minify());
+
+app.use(express.static(path.resolve(__dirname, './react-app/build')));
 app.use(express.static(path.join(__dirname, "public")));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// r.connect(
-//   {
-//     host: process.env.RETHINKDB_HOST,
-//     port: process.env.RETHINKDB_PORT,
-//     db: process.env.RETHINKDB_DEFAULT_DB,
-//   },
-//   (err, conn) => {
-//     if (err) throw err;
-//     console.log("db connected");
-//     openConn = conn;
-//     BeginRealTimeStream();
-//   }
-// );
+r.connect(
+  {
+    host: process.env.RETHINKDB_HOST,
+    port: process.env.RETHINKDB_PORT,
+    db: process.env.RETHINKDB_DEFAULT_DB,
+  },
+  (err, conn) => {
+    if (err) throw err;
+    console.log("db connected");
+    openConn = conn;
+    BeginRealTimeStream();
+  }
+);
 
 // setInterval(() => {
 //   var allOrders = [];
@@ -267,8 +272,23 @@ app.get("/CheckUsername", (req, res, next) => {
     });
 });
 
-app.post("/api/UpdateOrder", (req, res, next) => {
+app.post('/api/UpdateFormOrder', function (req, res) {
+  console.log(req.body,req.query);
+  var result = orderSchema.validate(req.body);
 
+  if (result.error)
+    return res.status(422).send(result.error.details[0].message);
+
+  r.table("Orders")
+    .get(req.body.id)
+    .update(req.body)
+    .run(openConn, (err, result) => {
+      if (err) return next(err);
+      res.json(null);
+    });
+});
+
+app.post("/api/UpdateOrder", (req, res, next) => {
   var result = orderSchema.validate(req.body);
 
   if (result.error)
@@ -303,6 +323,7 @@ app.post("/api/DeleteOrder", (req, res, next) => {
     .delete()
     .run(openConn, (err, result) => {
       if (err) return next(err);
+      res.json({});
     });
 });
 

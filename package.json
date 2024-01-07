@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=prod&&set PORT=443&&node app",
-    "dev": "set NODE_ENV=dev&&set SOCKET_POLLING_PORT=5000 && set RETHINKDB_HOST=146.190.40.202&&set RETHINKDB_PORT=28015 && set RETHINKDB_DEFAULT_DB=StoreDB&& nodemon app.js"
+    "build-react": "cd react-app && npm run build",
+    "start-node": "set NODE_ENV=dev&&set SOCKET_POLLING_PORT=5000 && set RETHINKDB_HOST=146.190.40.202&&set RETHINKDB_PORT=28015 && set RETHINKDB_DEFAULT_DB=StoreDB&& nodemon app.js",
+    "dev": "npm run build-react && npm run start-node"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +25,7 @@
     "helmet": "^3.23.3",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
+    "materialize-css": "^1.0.0-rc.2",
     "mysql": "^2.18.1",
     "rellax": "^1.12.1",
     "rethinkdb": "^2.4.2",

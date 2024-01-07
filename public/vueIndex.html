@@ -260,21 +260,21 @@
         minimumFractionDigits: 2,      
         maximumFractionDigits: 2,
       });
-      //var socket = io();
+      var socket = io();
 
       $(()=>{        
         $('.dropdown-trigger').dropdown({constrainWidth:false});
         $('.modal').modal();
       });
 
-      // socket.on("broadcast", function (data) {
-      //   vm.updateOrder(data);
-      //   charts.updateData(data);
-      // });
+      socket.on("broadcast", function (data) {
+        vm.updateOrder(data);
+        charts.updateData(data);
+      });
 
-      // socket.on("socketError", function (error) {
-      //   ShowError(data);
-      // });
+      socket.on("socketError", function (error) {
+        ShowError(data);
+      });
 
       function NewOrderModalShow (){
         $("#ModalHeader").text("Add New Order");
