@@ -1,4 +1,3 @@
-import React from 'react';
 import CardIcon from '../CardIcon/CardIcon';
 
 interface CardProps {

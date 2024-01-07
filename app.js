@@ -87,20 +87,20 @@ r.connect(
 // },5000);
 
 function BeginRealTimeStream() {
-  r.table("Orders")
-    .changes()
-    .run(openConn, function (err, feed) {
-      if (err) {
-        throw err;
-      }
+  // r.table("Orders")
+  //   .changes()
+  //   .run(openConn, function (err, feed) {
+  //     if (err) {
+  //       throw err;
+  //     }
 
-      feed.on("error", function (error) {
-        io.sockets.emit("socketError", error);
-      });
-      feed.on("data", function (newData) {
-        io.sockets.emit("broadcast", newData);
-      });
-    });
+  //     feed.on("error", function (error) {
+  //       io.sockets.emit("socketError", error);
+  //     });
+  //     feed.on("data", function (newData) {
+  //       io.sockets.emit("broadcast", newData);
+  //     });
+  //   });
 }
 
 app.get("/api/Orders", (req, res, next) => {
@@ -269,22 +269,6 @@ app.get("/CheckUsername", (req, res, next) => {
     .run(openConn, (err, count) => {
       if (err) return next(err);
       res.json({ usernameFree: count == 0 });
-    });
-});
-
-app.post('/api/UpdateFormOrder', function (req, res) {
-  console.log(req.body,req.query);
-  var result = orderSchema.validate(req.body);
-
-  if (result.error)
-    return res.status(422).send(result.error.details[0].message);
-
-  r.table("Orders")
-    .get(req.body.id)
-    .update(req.body)
-    .run(openConn, (err, result) => {
-      if (err) return next(err);
-      res.json(null);
     });
 });
 
