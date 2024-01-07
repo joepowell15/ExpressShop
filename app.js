@@ -11,7 +11,7 @@ import https from "https";
 import http from "http";
 import compression from 'compression';
 import minify from 'express-minify';
-import bodyParser  from 'body-parser';
+import bodyParser from 'body-parser';
 const app = express();
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -20,8 +20,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 //schemas
- import loginSchema from"./public/js/schemas/loginSchema.mjs";
- import orderSchema from "./public/js/schemas/orderSchema.mjs";
+import loginSchema from "./public/js/schemas/loginSchema.mjs";
+import orderSchema from "./public/js/schemas/orderSchema.mjs";
 
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
@@ -104,14 +104,39 @@ function BeginRealTimeStream() {
 }
 
 app.get("/api/Orders", (req, res, next) => {
-  r.table("Orders").run(openConn, (err, cursor) => {
-    if (err) return next(err);
+  const sort = req.query.sort || "AToZ";
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const search = req.query.search || "";
 
-    cursor.toArray((err, result) => {
+  var rethinkDBSearch = null;
+  switch (sort) {
+    case "AToZ":
+      rethinkDBSearch = r.row("Customer Name").downcase();
+      break;
+    case "ZToA":
+      rethinkDBSearch = r.desc(r.row("Customer Name").downcase());
+      break;
+    case "AscendingPrice":
+      rethinkDBSearch = r.row("Unit Price");
+      break;
+    case "DescendingPrice":
+      rethinkDBSearch = r.desc((r.row("Unit Price")));
+      break;
+  }
+
+
+  r.table("Orders")
+    .orderBy(rethinkDBSearch)
+    .filter(!search || r.row("Customer Name").downcase().match(search.toLowerCase()))
+    .slice((pageSize * page) - pageSize, pageSize).run(openConn, (err, cursor) => {
       if (err) return next(err);
-      res.json(result);
+
+      cursor.toArray((err, result) => {
+        if (err) return next(err);
+        res.json(result);
+      });
     });
-  });
 });
 
 app.get("/api/GetProfit", (req, res, next) => {
@@ -280,28 +305,30 @@ app.post("/api/UpdateOrder", (req, res, next) => {
 
   r.table("Orders")
     .get(req.body.id)
-    .update(req.body)
+    .update(req.body, { returnChanges: true })
     .run(openConn, (err, result) => {
       if (err) return next(err);
-      res.json(null);
+
+      res.json(result.changes.map(x => x.new_val));
     });
 });
 
 app.post("/api/NewOrder", (req, res, next) => {
   var result = orderSchema.validate(req.body);
 
-  if (result.error)
-    return res.status(422).send(result.error.details[0].message);
+  if (result.error) return res.status(422).send({ message: result.error.details[0].message });
+
+  delete req.body.id;
 
   r.table("Orders")
-    .insert(req.body)
+    .insert(req.body, { returnChanges: true })
     .run(openConn, (err, result) => {
       if (err) return next(err);
-      res.json(null);
+      res.json(result.changes.map(x => x.new_val));
     });
 });
 
-app.post("/api/DeleteOrder", (req, res, next) => {
+app.delete("/api/DeleteOrder", (req, res, next) => {
   r.table("Orders")
     .get(req.query.id)
     .delete()
@@ -319,12 +346,13 @@ app.use((err, req, res, next) => {
 
 //middleware end point
 app.use((err, req, res, next) => {
-  res.status("500").json({ error: "Error On Server. Try Again" }).end();
+  console.log(err);
+  res.status(500).json({ error: "Error On Server. Try Again" }).end();
 });
 
 const PORT = process.env.SOCKET_POLLING_PORT || 5000;
 
-if (process.env.NODE_ENV  != "prod") {
+if (process.env.NODE_ENV != "prod") {
   app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 }
 
