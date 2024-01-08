@@ -107,7 +107,7 @@ app.get("/api/Orders", (req, res, next) => {
   const sort = req.query.sort || "AToZ";
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 10;
-  const search = req.query.search || "";
+  const search = req.query.search?.trim() || "";
 
   var rethinkDBSearch = null;
   switch (sort) {
@@ -129,13 +129,26 @@ app.get("/api/Orders", (req, res, next) => {
   r.table("Orders")
     .orderBy(rethinkDBSearch)
     .filter(!search || r.row("Customer Name").downcase().match(search.toLowerCase()))
-    .slice((pageSize * page) - pageSize, pageSize).run(openConn, (err, cursor) => {
+    .slice((pageSize * page) - pageSize, (pageSize * page)).run(openConn, (err, cursor) => {
       if (err) return next(err);
 
       cursor.toArray((err, result) => {
         if (err) return next(err);
         res.json(result);
       });
+    });
+});
+
+app.get("/api/OrderCount", (req, res, next) => {
+  var search = req.query.search?.trim() || "";
+
+  r.table("Orders")
+    .filter(!search || r.row("Customer Name").downcase().match(search.toLowerCase()))
+    .count()
+    .run(openConn, (err, result) => {
+      if (err) return next(err);
+
+      res.json({ orderCount: result });
     });
 });
 
@@ -303,6 +316,8 @@ app.post("/api/UpdateOrder", (req, res, next) => {
   if (result.error)
     return res.status(422).send(result.error.details[0].message);
 
+  req.body["Customer Name"] = req.body["Customer Name"].trim();
+
   r.table("Orders")
     .get(req.body.id)
     .update(req.body, { returnChanges: true })
@@ -319,6 +334,7 @@ app.post("/api/NewOrder", (req, res, next) => {
   if (result.error) return res.status(422).send({ message: result.error.details[0].message });
 
   delete req.body.id;
+  req.body["Customer Name"] = req.body["Customer Name"].trim();
 
   r.table("Orders")
     .insert(req.body, { returnChanges: true })

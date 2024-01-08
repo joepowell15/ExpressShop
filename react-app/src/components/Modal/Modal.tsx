@@ -1,9 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import M from 'materialize-css';
-import { useItemAddOrUpdateMutation } from '../useItems/api.items';
+import { useItemAddOrUpdateMutation } from '../api/api.items';
 
 interface ModalProps {
+   trySaveModal: (id: string, itemName: string, quantity: number, unitPrice: number, category: string) => void;
    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
    titleText?: string;
    itemName?: string;
@@ -13,7 +14,7 @@ interface ModalProps {
    id?: string;
 }
 
-function Modal({ setShowModal, itemName, quantity, unitPrice, category, id = "" }: ModalProps) {
+function Modal({ trySaveModal, setShowModal, itemName, quantity, unitPrice, category, id = "" }: ModalProps) {
    useEffect(() => {
       var elems = document.querySelectorAll('.modal');
       var instances = M.Modal.init(elems, { onCloseEnd: () => { setShowModal(false) } });
@@ -28,7 +29,6 @@ function Modal({ setShowModal, itemName, quantity, unitPrice, category, id = "" 
    const [unitPriceOut, setUnitPriceOut] = useState<number>(unitPrice || 0);
    const [categoryOut, setCategoryOut] = useState<string>(category || "(None)");
 
-   var addItemMutation = useItemAddOrUpdateMutation();
    var titleText = "Edit";
    if (!id) {
       titleText = "Add New";
@@ -74,9 +74,9 @@ function Modal({ setShowModal, itemName, quantity, unitPrice, category, id = "" 
          </div>
 
          <div className="modal-footer">
-            <button onClick={() => addItemMutation.mutate({ id, "Customer Name": itemNameOut, "Order Quantity": quantityOut, "Unit Price": unitPriceOut, "Product Category": categoryOut })} type="button" className="btn btn-large waves-effect waves-green btn-flat">Save</button>
+            <button onClick={() => trySaveModal(id, itemNameOut, quantityOut, unitPriceOut, categoryOut)} type="button" className="btn btn-large waves-effect waves-green btn-flat">Save</button>
          </div>
-      </form>
+      </form >
    </div >
 }
 
