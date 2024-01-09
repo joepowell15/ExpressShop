@@ -356,6 +356,11 @@ app.delete("/api/DeleteOrder", (req, res, next) => {
     });
 });
 
+app.use(function(req, res, next) {
+  res.status(404).sendFile(path.join(__dirname, '/public/error.html'));
+  return;
+});
+
 //middleware error logging
 app.use((err, req, res, next) => {
   r.table("Log").insert(err).run(openConn);
