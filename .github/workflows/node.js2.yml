@@ -50,4 +50,4 @@ jobs:
           npm install --only=prod
           npm run build
           cd ../
-          pm2 restart app.config.js --env production
+          pm2 restart app.config.cjs --env production
