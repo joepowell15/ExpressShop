@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     name : "Portfolio",
-    script : "./app.tsx",
+    script : "./app.js",
     watch : true,
     env_production: {
         NODE_ENV: "prod",
