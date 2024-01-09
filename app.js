@@ -18,7 +18,7 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
+var httpServer = null;
 //schemas
 import loginSchema from "./public/js/schemas/loginSchema.mjs";
 import orderSchema from "./public/js/schemas/orderSchema.mjs";
@@ -36,13 +36,14 @@ if (process.env.NODE_ENV == "prod") {
     ),
   };
 
-  https.createServer(options, app).listen(443);
+  httpServer = https.createServer(options, app).listen(443);
 } else {
-  var httpServer = http.Server(app);
+  httpServer = http.Server(app);
   httpServer.listen(3000);
 }
 
-import io from "socket.io";
+import Server from "socket.io";
+const io = new Server(httpServer);
 
 app.use(helmet());
 app.use(compression());
@@ -87,20 +88,20 @@ r.connect(
 // },5000);
 
 function BeginRealTimeStream() {
-  // r.table("Orders")
-  //   .changes()
-  //   .run(openConn, function (err, feed) {
-  //     if (err) {
-  //       throw err;
-  //     }
+  r.table("Orders")
+    .changes()
+    .run(openConn, function (err, feed) {
+      if (err) {
+        throw err;
+      }
 
-  //     feed.on("error", function (error) {
-  //       io.sockets.emit("socketError", error);
-  //     });
-  //     feed.on("data", function (newData) {
-  //       io.sockets.emit("broadcast", newData);
-  //     });
-  //   });
+      feed.on("error", function (error) {
+        io.sockets.emit("socketError", error);
+      });
+      feed.on("data", function (newData) {
+        io.sockets.emit("broadcast", newData);
+      });
+    });
 }
 
 app.get("/api/Orders", (req, res, next) => {
@@ -347,10 +348,11 @@ app.post("/api/NewOrder", (req, res, next) => {
 app.delete("/api/DeleteOrder", (req, res, next) => {
   r.table("Orders")
     .get(req.query.id)
-    .delete()
+    .delete({ returnChanges: true })
     .run(openConn, (err, result) => {
       if (err) return next(err);
-      res.json({});
+
+      res.json(result.changes.map(x => x.old_val));
     });
 });
 

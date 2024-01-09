@@ -1,18 +1,6 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import M from 'materialize-css';
-import { useItemAddOrUpdateMutation } from '../api/api.items';
-
-interface ModalProps {
-   trySaveModal: (id: string, itemName: string, quantity: number, unitPrice: number, category: string) => void;
-   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-   titleText?: string;
-   itemName?: string;
-   quantity?: number;
-   unitPrice?: number;
-   category?: string;
-   id?: string;
-}
+import { ModalProps } from '../../interfaces/interfaces';
 
 function Modal({ trySaveModal, setShowModal, itemName, quantity, unitPrice, category, id = "" }: ModalProps) {
    useEffect(() => {

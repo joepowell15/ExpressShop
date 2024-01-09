@@ -1,14 +1,5 @@
+import { CardProps } from '../../interfaces/interfaces';
 import CardIcon from '../CardIcon/CardIcon';
-
-interface CardProps {
-   handleRemove: (id: string) => void;
-   setEditModalValues: (id: string) => void;
-   itemName: string;
-   quantity: number;
-   unitPrice: number;
-   category: string;
-   id: string;
-}
 
 function Card({ handleRemove, setEditModalValues, itemName, quantity, unitPrice, category, id }: CardProps) {
    return <div className='list-complete-item row'>

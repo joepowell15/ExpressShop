@@ -36,12 +36,13 @@
     "mysql": "^2.18.1",
     "rellax": "^1.12.1",
     "rethinkdb": "^2.4.2",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.17.7",
     "@types/materialize-css": "^1.0.14",
+    "@types/socket.io": "^3.0.2",
     "nodemon": "^2.0.4"
   }
 }

@@ -1,10 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { dbItem, uiItem } from '../Cards/Cards';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { UiItem } from '../../interfaces/interfaces';
+import { DbItem } from '../../interfaces/interfaces';
 import { trackPromise } from 'react-promise-tracker';
-
-interface mutatedDbItem extends dbItem {
-  updateItemAdded: () => void;
-}
+import { DeletedDbItem } from '../../interfaces/interfaces';
+import { MutatedDbItem } from '../../interfaces/interfaces';
 
 const getTotalPages = async (page: number, pageSize: number, search: string) => {
   const res = await fetch(`/api/OrderCount?search=${search}`);
@@ -23,7 +22,7 @@ export const useTotalPages = (page: number, pageSize: number, search: string) =>
 const getItems = async (page: number, pageSize: number, sort: string, search: string) => {
   const res = await trackPromise(fetch(`/api/Orders?page=${page}&sort=${sort}&search=${search}&pageSize=${pageSize}`));
   var data = await res.json();
-  return data.map((dbItem: dbItem) => {
+  return data.map((dbItem: DbItem) => {
     return {
       id: dbItem.id,
       itemName: dbItem["Customer Name"],
@@ -35,13 +34,14 @@ const getItems = async (page: number, pageSize: number, sort: string, search: st
 };
 
 export const useItems = (page: number, pageSize: number, sort: string, search: string) => {
-  return useQuery<uiItem[]>({
-    queryKey: ['items'],
+  return useQuery<UiItem[]>({
+    queryKey: ['items', page, search, sort],
     queryFn: () => getItems(page, pageSize, sort, search),
+    placeholderData: keepPreviousData,
   });
 };
 
-const addNewOrUpdateItem = async (itemToMutate: mutatedDbItem) => {
+const addNewOrUpdateItem = async (itemToMutate: MutatedDbItem) => {
   var actionUrl = "/api/updateOrder";
 
   if (!itemToMutate.id) actionUrl = "/api/NewOrder";
@@ -57,15 +57,15 @@ const addNewOrUpdateItem = async (itemToMutate: mutatedDbItem) => {
   return data;
 }
 
-export const useItemAddOrUpdateMutation = () => {
+export const useItemAddOrUpdateMutation = (page: number, sort: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addNewOrUpdateItem,
     onError: (error) => {
       M.toast({ html: error.message, classes: "red yellow-text" });
     },
-    onSuccess: (data: mutatedDbItem[], variables: mutatedDbItem) => {
-      variables.updateItemAdded();
+    onSuccess: (data: MutatedDbItem[], variables: MutatedDbItem) => {
+      variables.updateItemAddedCallback();
       var elem = document.querySelector('.modal');
       if (elem) {
         var instance = M.Modal.getInstance(elem);
@@ -75,11 +75,11 @@ export const useItemAddOrUpdateMutation = () => {
       if (variables.id) {
         M.toast({ html: "Item Updated Successfully", classes: "green white-text" });
         return queryClient.invalidateQueries({
-          queryKey: ['items'],
+          queryKey: ['items', page, search, sort],
         });
       }
 
-      queryClient.setQueryData(['items'], (d: mutatedDbItem[]) => {
+      queryClient.setQueryData(['items', page, search, sort], (d: MutatedDbItem[]) => {
         M.toast({ html: "Item Added Successfully", classes: "green white-text" });
 
         var newData = data.map(x => {
@@ -97,8 +97,8 @@ export const useItemAddOrUpdateMutation = () => {
   })
 };
 
-const deleteItem = async (id: string) => {
-  var res = await trackPromise(fetch(`/api/DeleteOrder?id=${id}`, { method: "DELETE" }));
+const deleteItem = async (deletedItem: DeletedDbItem) => {
+  var res = await trackPromise(fetch(`/api/DeleteOrder?id=${deletedItem.id}`, { method: "DELETE" }));
 
   if (!res.ok) {
     var messageHolder = await res.json();
@@ -109,18 +109,20 @@ const deleteItem = async (id: string) => {
   return data;
 }
 
-export const useDeleteItemMutation = () => {
+export const useDeleteItemMutation = (page: number, sort: string, search: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteItem,
     onError: (error) => {
       M.toast({ html: error.message, classes: "red yellow-text" });
     },
-    onSuccess: (oldData, id: string) => {
+    onSuccess: (oldData, variables: DeletedDbItem) => {
+      variables.updateItemDeletedCallback();
       M.toast({ html: "Item Deleted Successfully", classes: "green white-text" });
 
-      queryClient.setQueryData(['items'], (d: any) => {
-        return d.filter((x: dbItem) => x.id != id);
+
+      queryClient.setQueryData(['items', page, search, sort], (d: any) => {
+        return d.filter((x: DbItem) => x.id != variables.id);
       });
     }
   })

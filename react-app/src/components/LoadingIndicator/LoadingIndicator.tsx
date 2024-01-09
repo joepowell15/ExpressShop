@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { usePromiseTracker } from 'react-promise-tracker';
 
 const LoadingIndicator = () => {

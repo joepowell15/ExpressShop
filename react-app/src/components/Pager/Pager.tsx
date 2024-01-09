@@ -1,11 +1,4 @@
-import React, { FC } from 'react';
-
-
-interface PagerProps {
-  page: number;
-  totalPages: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-}
+import { PagerProps } from '../../interfaces/interfaces';
 
 function Pager({ setPage, page, totalPages }: PagerProps) {
 

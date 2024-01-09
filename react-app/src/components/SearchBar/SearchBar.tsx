@@ -1,17 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
-
-
-interface SearchBarProps {
-  sort: string;
-  pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
-  debounceSearchValue: (searchText:string) => void;
-  setSort: React.Dispatch<React.SetStateAction<string>>;
-  setNewModalValues: () => void;
-}
+import { useEffect } from 'react';
+import { SearchBarProps } from '../../interfaces/interfaces';
 
 function SearchBar({ sort, pageSize, setPageSize, debounceSearchValue, setSort, setNewModalValues }: SearchBarProps) {
-
   useEffect(() => {
     var elems = document.querySelectorAll('.dropdown-trigger');
     M.Dropdown.init(elems, {constrainWidth:false});
@@ -45,4 +35,5 @@ function SearchBar({ sort, pageSize, setPageSize, debounceSearchValue, setSort, 
     </div>
   </div>
 }
+
 export default SearchBar;

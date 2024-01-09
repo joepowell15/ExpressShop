@@ -1,8 +1,5 @@
 import React from 'react';
-
-interface CardIconProps {
-   category: string;
-}
+import { CardIconProps } from '../../interfaces/interfaces';
 
 function CardIcon({ category }: CardIconProps): React.JSX.Element {
    switch (category) {
