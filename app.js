@@ -1,20 +1,27 @@
-const express = require("express");
-const path = require("path");
-const r = require("rethinkdb");
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
-const helmet = require("helmet");
-const saltRounds = 10;
+import express from "express";
+import path from "path";
+import r from "rethinkdb";
+import jwt from "jsonwebtoken";
+import fs from "fs";
+import bcrypt from "bcryptjs";
+import helmet from "helmet";
+var saltRounds = 10;
 var openConn = null;
-var compression = require('compression')
-var minify = require('express-minify');
+import https from "https";
+import http from "http";
+import compression from 'compression';
+import minify from 'express-minify';
+import bodyParser from 'body-parser';
 const app = express();
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+var httpServer = null;
 //schemas
-var loginSchema = require("./public/js/schemas/loginSchema");
-var orderSchema = require("./public/js/schemas/orderSchema");
+import loginSchema from "./public/js/schemas/loginSchema.mjs";
+import orderSchema from "./public/js/schemas/orderSchema.mjs";
 
 const tokenSecret =
   "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611";
@@ -29,20 +36,25 @@ if (process.env.NODE_ENV == "prod") {
     ),
   };
 
-  var http = require("https").createServer(options, app).listen(443);
+  httpServer = https.createServer(options, app).listen(443);
 } else {
-  var http = require("http").Server(app);
-  http.listen(3000);
+  httpServer = http.Server(app);
+  httpServer.listen(3000);
 }
 
-var io = require("socket.io")(http);
+import Server from "socket.io";
+const io = new Server(httpServer);
 
 app.use(helmet());
 app.use(compression());
 app.use(minify());
+
+app.use(express.static(path.resolve(__dirname, './react-app/build')));
 app.use(express.static(path.join(__dirname, "public")));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 r.connect(
   {
@@ -93,14 +105,52 @@ function BeginRealTimeStream() {
 }
 
 app.get("/api/Orders", (req, res, next) => {
-  r.table("Orders").run(openConn, (err, cursor) => {
-    if (err) return next(err);
+  const sort = req.query.sort || "AToZ";
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const search = req.query.search?.trim() || "";
 
-    cursor.toArray((err, result) => {
+  var rethinkDBSearch = null;
+  switch (sort) {
+    case "AToZ":
+      rethinkDBSearch = r.row("Customer Name").downcase();
+      break;
+    case "ZToA":
+      rethinkDBSearch = r.desc(r.row("Customer Name").downcase());
+      break;
+    case "AscendingPrice":
+      rethinkDBSearch = r.row("Unit Price");
+      break;
+    case "DescendingPrice":
+      rethinkDBSearch = r.desc((r.row("Unit Price")));
+      break;
+  }
+
+
+  r.table("Orders")
+    .orderBy(rethinkDBSearch)
+    .filter(!search || r.row("Customer Name").downcase().match(search.toLowerCase()))
+    .slice((pageSize * page) - pageSize, (pageSize * page)).run(openConn, (err, cursor) => {
       if (err) return next(err);
-      res.json(result);
+
+      cursor.toArray((err, result) => {
+        if (err) return next(err);
+        res.json(result);
+      });
     });
-  });
+});
+
+app.get("/api/OrderCount", (req, res, next) => {
+  var search = req.query.search?.trim() || "";
+
+  r.table("Orders")
+    .filter(!search || r.row("Customer Name").downcase().match(search.toLowerCase()))
+    .count()
+    .run(openConn, (err, result) => {
+      if (err) return next(err);
+
+      res.json({ orderCount: result });
+    });
 });
 
 app.get("/api/GetProfit", (req, res, next) => {
@@ -262,42 +312,53 @@ app.get("/CheckUsername", (req, res, next) => {
 });
 
 app.post("/api/UpdateOrder", (req, res, next) => {
-
   var result = orderSchema.validate(req.body);
 
   if (result.error)
     return res.status(422).send(result.error.details[0].message);
 
+  req.body["Customer Name"] = req.body["Customer Name"].trim();
+
   r.table("Orders")
     .get(req.body.id)
-    .update(req.body)
+    .update(req.body, { returnChanges: true })
     .run(openConn, (err, result) => {
       if (err) return next(err);
-      res.json(null);
+
+      res.json(result.changes.map(x => x.new_val));
     });
 });
 
 app.post("/api/NewOrder", (req, res, next) => {
   var result = orderSchema.validate(req.body);
 
-  if (result.error)
-    return res.status(422).send(result.error.details[0].message);
+  if (result.error) return res.status(422).send({ message: result.error.details[0].message });
+
+  delete req.body.id;
+  req.body["Customer Name"] = req.body["Customer Name"].trim();
 
   r.table("Orders")
-    .insert(req.body)
+    .insert(req.body, { returnChanges: true })
     .run(openConn, (err, result) => {
       if (err) return next(err);
-      res.json(null);
+      res.json(result.changes.map(x => x.new_val));
     });
 });
 
-app.post("/api/DeleteOrder", (req, res, next) => {
+app.delete("/api/DeleteOrder", (req, res, next) => {
   r.table("Orders")
     .get(req.query.id)
-    .delete()
+    .delete({ returnChanges: true })
     .run(openConn, (err, result) => {
       if (err) return next(err);
+
+      res.json(result.changes.map(x => x.old_val));
     });
+});
+
+app.use(function(req, res, next) {
+  res.status(404).sendFile(path.join(__dirname, '/public/error.html'));
+  return;
 });
 
 //middleware error logging
@@ -308,12 +369,13 @@ app.use((err, req, res, next) => {
 
 //middleware end point
 app.use((err, req, res, next) => {
-  res.status("500").json({ error: "Error On Server. Try Again" }).end();
+  console.log(err);
+  res.status(500).json({ error: "Error On Server. Try Again" }).end();
 });
 
 const PORT = process.env.SOCKET_POLLING_PORT || 5000;
 
-if (process.env.NODE_ENV  != "prod") {
+if (process.env.NODE_ENV != "prod") {
   app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 }
 

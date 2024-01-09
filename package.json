@@ -1,33 +1,47 @@
 {
   "name": "ExpressShop",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=prod&&set PORT=443&&node app",
-    "dev": "set NODE_ENV=dev&&set SOCKET_POLLING_PORT=5000 && set RETHINKDB_HOST=146.190.40.202&&set RETHINKDB_PORT=28015 && set RETHINKDB_DEFAULT_DB=StoreDB&& nodemon app.js"
+    "build-react": "cd react-app && npm run build",
+    "start-node": "set NODE_ENV=dev&&set SOCKET_POLLING_PORT=5000 && set RETHINKDB_HOST=146.190.40.202&&set RETHINKDB_PORT=28015 && set RETHINKDB_DEFAULT_DB=StoreDB&& nodemon app.js",
+    "dev": "npm run build-react && npm run start-node"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@tanstack/react-query": "^5.17.7",
+    "@tanstack/react-query-devtools": "^5.17.7",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "chart.js": "^2.9.3",
     "compression": "^1.7.4",
+    "debounce": "^2.0.0",
     "express": "^4.17.1",
     "express-minify": "^1.0.0",
     "fs": "0.0.1-security",
     "helmet": "^3.23.3",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
+    "materialize-css": "^1.0.0",
     "mysql": "^2.18.1",
     "rellax": "^1.12.1",
     "rethinkdb": "^2.4.2",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.17.7",
+    "@types/materialize-css": "^1.0.14",
+    "@types/socket.io": "^3.0.2",
     "nodemon": "^2.0.4"
   }
 }

@@ -140,7 +140,7 @@ var vm = new Vue({
     },
     removeElement: function (id) {
       $.ajax({
-        type: "POST",
+        type: "DELETE",
         url: "api/DeleteOrder?" + $.param({ id }),
         contentType: "application/json",
         success: (data) => { },

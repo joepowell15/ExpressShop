@@ -46,4 +46,8 @@ jobs:
           git pull origin master
           git status
           npm install --only=prod
+          cd ./react-app/
+          npm install --only=prod
+          npm run build
+          cd ../
           pm2 restart app.config.js --env production
