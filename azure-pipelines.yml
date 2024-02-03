@@ -12,7 +12,7 @@ variables:
   azureSubscription: 'd3d5803a-1519-450a-8663-e8fd21159083'
 
   # Web app name
-  webAppName: 'portfolio'
+  webAppName: 'portfolio-joe-powell'
 
   # Environment name
   environmentName: 'prod-env'
