@@ -16,8 +16,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <div>
         <NavBar />
+        <a title='View Source' href="https://github.com/joepowell15/ExpressShop/tree/master/react-app" target="_blank" rel="noopener">
+          <div className="valign-wrapper header-area">
+            <h2 style={{ width: '100%' }} className="center-align">React Item Management</h2>
+          </div>
+        </a>
+
         <div className="valign-wrapper header-area">
-          <h2 style={{ width: '100%' }} className="center-align">React Item Management</h2>
+          <p style={{ width: '100%' }} className="center-align">
+            On this page you can create, update, delete, search, and filter the items below. All changes are saved to a database.
+          </p>
         </div>
 
         <div className='container center-align'>
@@ -38,7 +46,7 @@ function App() {
 const style = {
   minHeight: '1090px',
   backgroundColor: "white",
-  borderRadius:'20px',
+  borderRadius: '20px',
 }
 
 export default App;
