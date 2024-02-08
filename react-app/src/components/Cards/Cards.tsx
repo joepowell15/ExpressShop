@@ -8,6 +8,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import Pager from '../Pager/Pager';
 import { UiItem } from '../../interfaces/interfaces';
 import { SelectedUiItem } from '../../interfaces/interfaces';
+import M from 'materialize-css';
 
 function Cards() {
    const [selectedItem, setSelectedItem] = useState<SelectedUiItem>();
@@ -60,11 +61,34 @@ function Cards() {
       useDeleteMutation.mutate({ id, updateItemDeletedCallback });
    }
 
-   function trySaveModal(id: string, itemName: string, quanity: number, unitPrice: number, category: string) {
+   function trySaveModal(id: string, itemName: string, quantity: number, unitPrice: number, category: string) {
+      if (!validateFormValues(itemName, quantity, unitPrice, category)) {
+         return;
+      }
+
       const updateItemAddedCallback = () => {
          setItemAdded(!itemAdded);
       }
-      useAddOrUpdateItemMutation.mutate({ updateItemAddedCallback: updateItemAddedCallback, id, "Customer Name": itemName, "Order Quantity": quanity, "Unit Price": unitPrice, "Product Category": category });
+      useAddOrUpdateItemMutation.mutate({ updateItemAddedCallback: updateItemAddedCallback, id, "Customer Name": itemName, "Order Quantity": quantity, "Unit Price": unitPrice, "Product Category": category });
+   }
+
+   function validateFormValues(itemName: string, quantity: number, unitPrice: number, category: string) {
+      if (!itemName) {
+         M.toast({ html: "Item Name is required", classes: "red yellow-text" });
+         return false;
+      }
+
+      if (!quantity || quantity > 10000 || quantity < 1) {
+         M.toast({ html: "Quantity must be less than 10000 and greater than 1", classes: "red yellow-text" });
+         return false;
+      }
+
+      if (!unitPrice || unitPrice > 10000 || unitPrice < 1) {
+         M.toast({ html: "Price must be less than 10000 and greater than 1", classes: "red yellow-text" });
+         return false;
+      }
+
+      return true;
    }
 
    return <div>
@@ -79,3 +103,4 @@ function Cards() {
 }
 
 export default Cards;
+

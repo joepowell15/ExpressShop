@@ -35,14 +35,14 @@ function Modal({ trySaveModal, setShowModal, itemName, quantity, unitPrice, cate
                   </div>
 
                   <div className="input-field col s12 m6">
-                     <input id="Order Quantity" type="number" min="1" max="10000" value={quantityOut} onChange={e => setQuantityOut(parseFloat(e.target.value))} />
+                     <input id="Order Quantity" type="number" min="1" max="10000" value={quantityOut} onChange={e => setQuantityOut(e.target.value ? parseFloat(e.target.value) : 0)} />
                      <label className='active' htmlFor="Order Quantity">Quantity</label>
                      <span className="helper-text" data-error="Required" data-success=""></span>
                   </div>
 
                   <div className="input-field col s12 m6">
                      <i className="material-icons tiny prefix">attach_money</i>
-                     <input id="Unit Price" type="number" value={unitPriceOut} onChange={e => setUnitPriceOut(parseFloat(e.target.value))} />
+                     <input id="Unit Price" type="number" min="1" max="10000" value={unitPriceOut} onChange={e => setUnitPriceOut(e.target.value ? parseFloat(e.target.value): 0)} />
                      <label className='active' htmlFor="Unit Price">Price</label>
                   </div>
 

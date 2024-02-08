@@ -357,7 +357,7 @@ app.delete("/api/DeleteOrder", (req, res, next) => {
 });
 
 app.use(function(req, res, next) {
-  res.status(404).sendFile(path.join(__dirname, '/public/error.html'));
+  res.redirect("/");
   return;
 });
 
