@@ -25,7 +25,7 @@ function Modal({ trySaveModal, setShowModal, itemName, quantity, unitPrice, cate
    return <div id="EditOrderModal" className="modal">
       <form className="col s12">
          <div className="modal-content">
-            <h4 id="ModalHeader">{titleText} Order</h4>
+            <h4 id="ModalHeader">{titleText} Item</h4>
             <div className="row">
                <div className="row">
                   <div className="input-field col s12 m6">
