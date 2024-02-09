@@ -16,7 +16,7 @@ function SearchBar({ sort, pageSize, setPageSize, debounceSearchValue, setSort, 
     </div>
 
     <div className="col s6 right-align">
-      <a onClick={() => setNewModalValues()} className="btn waves-effect waves-light green action-btn"><span><i className="left material-icons">add</i>Add</span></a>
+      <a onClick={() => setNewModalValues()} className="btn green action-btn"><span><i className="left material-icons">add</i>Add</span></a>
 
       <a className="btn dropdown-trigger action-btn" data-target='PageSizeDropDown'><i className="left material-icons">list</i>Page Size</a>
       <ul id='PageSizeDropDown' className='dropdown-content'>

@@ -335,7 +335,7 @@ app.post("/api/NewOrder", (req, res, next) => {
   if (result.error) return res.status(422).send({ message: result.error.details[0].message });
 
   delete req.body.id;
-  req.body["Customer Name"] = req.body["Customer Name"].trim();
+  ValidateNewOrder(req);
 
   r.table("Orders")
     .insert(req.body, { returnChanges: true })
@@ -356,7 +356,7 @@ app.delete("/api/DeleteOrder", (req, res, next) => {
     });
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.redirect("/");
   return;
 });
@@ -377,6 +377,30 @@ const PORT = process.env.SOCKET_POLLING_PORT || 5000;
 
 if (process.env.NODE_ENV != "prod") {
   app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+}
+
+function ValidateNewOrder(req) {
+  req.body["Customer Name"] = req.body["Customer Name"].trim();
+
+  req.body["Customer Name"] = req.body["Customer Name"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+
+
+  if (!req.body["Order Date"]) {
+    req.body["Order Date"] = new Date();
+  }
+
+  if (!req.body["Profit"]) {
+    req.body["Profit"] =
+      parseInt(req.body["Order Quantity"]) *
+      parseFloat(req.body["Unit Price"]) *
+      0.9;
+  }
+
+  if (!req.body["Sales"]) {
+    req.body["Sales"] =
+      parseInt(req.body["Order Quantity"]) *
+      parseFloat(req.body["Unit Price"]);
+  }
 }
 
 function Register(user) {

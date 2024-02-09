@@ -168,3 +168,7 @@ footer.page-footer {
     opacity: 0;
   }
 }
+
+#EditOrderModal{
+  height: 500px;
+}

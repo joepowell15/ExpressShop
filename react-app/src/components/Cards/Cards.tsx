@@ -36,11 +36,15 @@ function Cards() {
 
    useEffect(() => {
       refetchItems();
+
+      if (!isLoadingItems && !items.length) {
+         setPage(page - 1);
+      }
    }, [itemAdded, itemDeleted]);
 
    useEffect(() => {
       refetchTotalPages();
-   }, [itemAdded, search, pageSize]);
+   }, [itemAdded, search, pageSize, itemDeleted]);
 
    if (isLoadingItems) return;
 
